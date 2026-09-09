@@ -1,0 +1,33 @@
+{
+  // ===== 学習中のネタバレ防止 =====
+  // AI の補完（ゴーストテキスト）を、このワークスペースだけ無効にする。
+  // 解答例が solutions/ にあるので、有効なままだと答えをそのまま提案してくる。
+  "editor.inlineSuggest.enabled": false,
+  "github.copilot.enable": {
+    "*": false,
+    "plaintext": false,
+    "markdown": false,
+    "typescript": false,
+    "typescriptreact": false
+  },
+  "github.copilot.nextEditSuggestions.enabled": false,
+
+  // 検索（Ctrl+Shift+F）の結果にも解答例を出さない
+  "search.exclude": {
+    "**/solutions/**": true,
+    "**/node_modules/**": true
+  },
+
+  // ===== 型を学ぶための表示設定 =====
+  // 引数名や推論された型をエディタ上に薄く表示する（型の勉強にかなり効く）
+  "typescript.inlayHints.parameterNames.enabled": "literals",
+  "typescript.inlayHints.variableTypes.enabled": true,
+  "typescript.inlayHints.functionLikeReturnTypes.enabled": true,
+  // ホバーで型を全部展開して見せる
+  "typescript.preferences.maximumHoverLength": 2000,
+  // ワークスペースの TypeScript を使う（5.9 系。VS Code 同梱版とズレないように）
+  "typescript.tsdk": "node_modules/typescript/lib",
+
+  "editor.formatOnSave": true,
+  "files.eol": "\n"
+}

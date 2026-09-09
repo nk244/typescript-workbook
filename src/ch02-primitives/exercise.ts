@@ -8,6 +8,13 @@ import type { Equal, Expect } from '../lib/type-test';
  * 引数の型は unknown のまま変えないこと。
  * ============================================================ */
 export function describeValue(value: unknown): string {
+  if (typeof(value) === 'string') {
+    return value.toUpperCase();
+  } else if (typeof(value) === 'number') {
+    return value.toString();
+  } else {
+    return '不明';
+  }
   throw new Error('not implemented');
 }
 
@@ -18,6 +25,7 @@ export function describeValue(value: unknown): string {
  * ?? と || の違いを意識すること。
  * ============================================================ */
 export function displayName(name: string | null | undefined): string {
+  return name || '名無し';
   throw new Error('not implemented');
 }
 
@@ -25,7 +33,7 @@ export function displayName(name: string | null | undefined): string {
  * 演習 2-3: never を返す関数
  * 必ず例外を投げる関数です。戻り値型に never をつけてください。
  * ============================================================ */
-export function assertNever(message: string) {
+export function assertNever(message: string): never {
   throw new Error(message);
 }
 
@@ -37,13 +45,13 @@ export function assertNever(message: string) {
 type Assignable<A, B> = [A] extends [B] ? true : false;
 
 // 42 を number の場所に置けるか？
-export type _t1 = Expect<Equal<Assignable<42, number>, unknown>>;
+export type _t1 = Expect<Equal<Assignable<42, number>, true>>;
 // number を 42 の場所に置けるか？
-export type _t2 = Expect<Equal<Assignable<number, 42>, unknown>>;
+export type _t2 = Expect<Equal<Assignable<number, 42>, false>>;
 // never を string の場所に置けるか？
-export type _t3 = Expect<Equal<Assignable<never, string>, unknown>>;
+export type _t3 = Expect<Equal<Assignable<never, string>, true>>;
 // string を unknown の場所に置けるか？
-export type _t4 = Expect<Equal<Assignable<string, unknown>, unknown>>;
+export type _t4 = Expect<Equal<Assignable<string, unknown>, true>>;
 
 /* ============================================================
  * 演習 2-5: any の危険を体験する
@@ -51,6 +59,9 @@ export type _t4 = Expect<Equal<Assignable<string, unknown>, unknown>>;
  * 引数の型を unknown に変え、必要な検査を足して
  * 「配列でなければ 0 を返す」ようにしてください。
  * ============================================================ */
-export function countItems(input: any): number {
+export function countItems(input: unknown): number {
+  if (!Array.isArray(input)) {
+    return 0;
+  }
   return input.length;
 }
