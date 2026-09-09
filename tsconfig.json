@@ -1,0 +1,25 @@
+{
+  // このカリキュラム全体の共通設定。第18章で 1 行ずつ意味を学びます。
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2023", "ESNext.Disposable", "DOM", "DOM.Iterable"],
+    "module": "preserve",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "types": ["node"],
+
+    // --- 型チェックの厳しさ（strict 系）---
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": false,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+
+    // --- 出力しない（学習用なので型チェックのみ）---
+    "noEmit": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src", "solutions", "vitest.config.ts", "scripts/*.ts"]
+}
