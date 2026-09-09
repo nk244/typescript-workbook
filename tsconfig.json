@@ -14,6 +14,8 @@
     "exactOptionalPropertyTypes": false,
     "noImplicitOverride": true,
     "noFallthroughCasesInSwitch": true,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
 
     // --- 出力しない（学習用なので型チェックのみ）---
     "noEmit": true,

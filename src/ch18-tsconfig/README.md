@@ -63,6 +63,7 @@ paths を使うときの注意: **TypeScript はパスを解決するだけで�
 | noUncheckedIndexedAccess | 配列やマップの読み出しを T または undefined にする | **強く推奨** |
 | noImplicitOverride | override キーワードを必須にする | 推奨 |
 | noFallthroughCasesInSwitch | switch の break 漏れを検出 | 推奨 |
+| allowUnreachableCode: false | return の後の到達不能コードをエラーにする | 推奨（既定は「警告表示のみ」） |
 | noUnusedLocals / noUnusedParameters | 未使用を検出 | ESLint に任せるほうが柔軟 |
 | exactOptionalPropertyTypes | ? と undefined 明示を区別する | 厳しめ。新規なら検討 |
 | verbatimModuleSyntax | import type を強制する | バンドラを使うなら推奨 |
