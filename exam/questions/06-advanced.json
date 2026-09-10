@@ -1,0 +1,116 @@
+{
+  "field": "advanced",
+  "label": "応用文法",
+  "questions": [
+    {
+      "id": "advanced-01",
+      "question": "次の関数に渡せない引数はどれか。\n\n  function f<T extends { id: number }>(x: T): T {\n    return x;\n  }",
+      "choices": [
+        "{ id: 1 }",
+        "{ id: 1, name: 'a' }",
+        "{ name: 'a' }",
+        "{ id: 1, tags: [] }"
+      ],
+      "answer": 2,
+      "explanation": "制約 extends { id: number } を満たさないのでエラー。制約は「最低限これを持つこと」を要求する。",
+      "ref": "第8章"
+    },
+    {
+      "id": "advanced-02",
+      "question": "次の型はどれか。\n\n  type T = keyof { a: number; b: string };",
+      "choices": ["'a' | 'b'", "number | string", "['a', 'b']", "{ a: 'a'; b: 'b' }"],
+      "answer": 0,
+      "explanation": "keyof はプロパティ名のユニオンを作る。値の型が欲しいときは T[keyof T]。",
+      "ref": "第11章"
+    },
+    {
+      "id": "advanced-03",
+      "question": "型の文脈で使う typeof の説明として正しいものはどれか。",
+      "choices": [
+        "実行時に型名の文字列を返す",
+        "値から、その値の型を取り出す",
+        "型から値を作る",
+        "型が等しいか比較する"
+      ],
+      "answer": 1,
+      "explanation": "const config = {...} に対する typeof config のように、値の世界から型の世界へ持ち上げる演算子。",
+      "ref": "第11章"
+    },
+    {
+      "id": "advanced-04",
+      "question": "次の Mapped Type の意味はどれか。\n\n  type M<T> = { [K in keyof T]: T[K] | null };",
+      "choices": [
+        "すべてのプロパティを省略可能にする",
+        "すべてのプロパティの値の型に null を足す",
+        "すべてのプロパティを削除する",
+        "キーを null にする"
+      ],
+      "answer": 1,
+      "explanation": "keyof T を回して、それぞれの値の型を変換している。修飾子を足したり外したりもできる。",
+      "ref": "第11章"
+    },
+    {
+      "id": "advanced-05",
+      "question": "関数型から戻り値の型を取り出す型として正しいものはどれか。",
+      "choices": [
+        "type R<F> = F extends (...a: any[]) => infer U ? U : never;",
+        "type R<F> = F extends infer U ? U : never;",
+        "type R<F> = keyof F;",
+        "type R<F> = F['return'];"
+      ],
+      "answer": 0,
+      "explanation": "infer は条件型の中でパターンに名前を付ける。組み込みの ReturnType もこの形で定義されている。",
+      "ref": "第12章"
+    },
+    {
+      "id": "advanced-06",
+      "question": "satisfies 演算子の説明として正しいものはどれか。",
+      "choices": [
+        "型注釈と同じで、値の型をその型に固定する",
+        "型に合っているか検査しつつ、値から推論された詳しい型を保つ",
+        "実行時に型を検証する",
+        "型エラーを無視する"
+      ],
+      "answer": 1,
+      "explanation": "注釈は型を広げてしまうが、satisfies は検査だけ行って推論結果を残す。設定オブジェクトで効く。",
+      "ref": "第14章"
+    },
+    {
+      "id": "advanced-07",
+      "question": "次の関数の戻り値の型として正しいものはどれか（ユーザー定義型ガード）。\n\n  function isString(x: unknown) {\n    return typeof x === 'string';\n  }",
+      "choices": ["boolean", "x is string", "string", "asserts x is string"],
+      "answer": 1,
+      "explanation": "x is string と書くと、呼び出し側で絞り込みが効く。単なる boolean では絞り込まれない。",
+      "ref": "第9章"
+    },
+    {
+      "id": "advanced-08",
+      "question": "次の関数の戻り値の型はどれか。\n\n  async function f() {\n    return 1;\n  }",
+      "choices": ["number", "Promise<number>", "Promise<void>", "Awaited<number>"],
+      "answer": 1,
+      "explanation": "async 関数は必ず Promise を返す。await した結果が number になる。",
+      "ref": "第16章"
+    },
+    {
+      "id": "advanced-09",
+      "question": "Awaited<Promise<Promise<string>>> はどれか。",
+      "choices": ["Promise<string>", "string", "unknown", "never"],
+      "answer": 1,
+      "explanation": "Awaited は再帰的に Promise を剥がす。await の結果の型を表す組み込み型。",
+      "ref": "第16章"
+    },
+    {
+      "id": "advanced-10",
+      "question": ".d.ts ファイルの役割として正しいものはどれか。",
+      "choices": [
+        "型情報だけを宣言し、実行されるコードは含まない",
+        "コンパイル後に JavaScript として出力される",
+        "テストコードを書くためのファイル",
+        "tsconfig.json の代わりになる"
+      ],
+      "answer": 0,
+      "explanation": "型のない JavaScript ライブラリに型を与えるためのファイル。値の実装は書けない。",
+      "ref": "第15章"
+    }
+  ]
+}

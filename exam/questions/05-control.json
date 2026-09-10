@@ -1,0 +1,106 @@
+{
+  "field": "control",
+  "label": "制御構造",
+  "questions": [
+    {
+      "id": "control-01",
+      "question": "次のコードで、if の中での value の型はどれか。\n\n  function f(value: string | number) {\n    if (typeof value === 'string') {\n      // ここ\n    }\n  }",
+      "choices": ["string | number", "string", "unknown", "any"],
+      "answer": 1,
+      "explanation": "typeof による絞り込み。制御フローに応じて型が変わるのが TypeScript の基本。",
+      "ref": "第3章"
+    },
+    {
+      "id": "control-02",
+      "question": "switch 文で全ケースを網羅したことをコンパイラに検査させる方法はどれか。",
+      "choices": [
+        "default で例外を投げる",
+        "default で残った値を never 型の変数に代入する",
+        "default を書かない",
+        "switch の前に typeof で調べる"
+      ],
+      "answer": 1,
+      "explanation": "網羅していれば残りは never になる。ケースを増やし忘れると代入できずコンパイルエラーになる。",
+      "ref": "第9章"
+    },
+    {
+      "id": "control-03",
+      "question": "for-in ループで得られるキーの型はどれか。",
+      "choices": ["string", "number", "keyof T", "string | number"],
+      "answer": 0,
+      "explanation": "for-in のキーは常に string。オブジェクトのキーとして使うには絞り込みや型アサーションが要る。",
+      "ref": "第11章"
+    },
+    {
+      "id": "control-04",
+      "question": "for-of で反復できないものはどれか。",
+      "choices": ["配列", "文字列", "Map", "プレーンなオブジェクトリテラル"],
+      "answer": 3,
+      "explanation": "for-of は反復可能（iterable）なものが対象。プレーンなオブジェクトは Object.entries などを挟む必要がある。",
+      "ref": "第5章"
+    },
+    {
+      "id": "control-05",
+      "question": "strict 設定（useUnknownInCatchVariables）で、catch 節の変数の型はどれか。",
+      "choices": ["any", "Error", "unknown", "never"],
+      "answer": 2,
+      "explanation": "throw はどんな値でも投げられるので unknown。instanceof Error などで絞り込んでから使う。",
+      "ref": "第16章"
+    },
+    {
+      "id": "control-06",
+      "question": "user が null のとき、次の式の評価結果はどれか。\n\n  user?.profile.name",
+      "choices": [
+        "実行時エラー",
+        "undefined",
+        "null",
+        "空文字"
+      ],
+      "answer": 1,
+      "explanation": "オプショナルチェーンは、左が null か undefined なら以降を評価せず undefined を返す。",
+      "ref": "第3章"
+    },
+    {
+      "id": "control-07",
+      "question": "次の 2 つの式の結果の組み合わせとして正しいものはどれか。\n\n  '' || 'default'\n  '' ?? 'default'",
+      "choices": [
+        "'default' と ''",
+        "'' と 'default'",
+        "どちらも 'default'",
+        "どちらも ''"
+      ],
+      "answer": 0,
+      "explanation": "|| は falsy（''、0、false など）で右へ倒れる。?? は null と undefined のときだけ右へ倒れる。",
+      "ref": "第2章"
+    },
+    {
+      "id": "control-08",
+      "question": "次のコードで、return より後ろでの items の型はどれか。\n\n  function sum(items: number[] | null) {\n    if (items === null) return 0;\n    // ここ\n  }",
+      "choices": ["number[] | null", "number[]", "null", "never"],
+      "answer": 1,
+      "explanation": "早期 return で null の可能性を消すと、それ以降は number[] に確定する。",
+      "ref": "第3章"
+    },
+    {
+      "id": "control-09",
+      "question": "Dog | Cat のユニオンを、プロパティの有無で絞り込む演算子はどれか。",
+      "choices": ["typeof", "instanceof", "in", "as"],
+      "answer": 2,
+      "explanation": "'bark' in animal で Dog 側に絞られる。typeof はプリミティブ、instanceof はクラス向け。",
+      "ref": "第3章"
+    },
+    {
+      "id": "control-10",
+      "question": "instanceof による絞り込みが使えるのはどれか。",
+      "choices": [
+        "type で定義したオブジェクト型",
+        "クラスから作られたインスタンス",
+        "リテラル型のユニオン",
+        "interface で定義した型"
+      ],
+      "answer": 1,
+      "explanation": "instanceof は実行時のプロトタイプを見る。型エイリアスや interface は実行時に存在しないので使えない。",
+      "ref": "第3章"
+    }
+  ]
+}

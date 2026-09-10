@@ -172,6 +172,7 @@ npm run check ex04       # 外伝の採点も同じコマンド
 - `docs/error-guide.md` — よく出るエラーメッセージの読み方
 - `docs/next-steps.md` — 完走後に読むもの・作るもの
 - `docs/progress.md` — 学習の進捗（採点結果の記録）
+- `exam/README.md` — TypeScript技術認定試験の模試（`npm run exam`）
 
 ---
 

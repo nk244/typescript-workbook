@@ -25,3 +25,5 @@ jobs:
         run: npm run verify:solutions
       - name: Lint（解答例）
         run: npx eslint solutions
+      - name: 模試の問題バンクを検査
+        run: npm run exam:validate

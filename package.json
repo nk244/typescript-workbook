@@ -10,7 +10,9 @@
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src solutions",
-    "verify:solutions": "node scripts/verify-solutions.mjs"
+    "verify:solutions": "node scripts/verify-solutions.mjs",
+    "exam": "node scripts/exam.mjs",
+    "exam:validate": "node scripts/exam.mjs --validate"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.5",

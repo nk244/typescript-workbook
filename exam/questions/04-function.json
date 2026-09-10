@@ -1,0 +1,116 @@
+{
+  "field": "function",
+  "label": "関数",
+  "questions": [
+    {
+      "id": "function-01",
+      "question": "次の関数定義の結果はどれか。\n\n  function f(a?: number, b: string) {}",
+      "choices": [
+        "省略可能な引数を必須引数より前に置けないのでエラー",
+        "問題なく定義できる",
+        "b が自動で省略可能になる",
+        "実行時にだけ落ちる"
+      ],
+      "answer": 0,
+      "explanation": "省略可能な引数は必須引数より後ろにしか置けない。順番を入れ替えるか、b にデフォルト値を与える。",
+      "ref": "第6章"
+    },
+    {
+      "id": "function-02",
+      "question": "次の関数の戻り値の型として推論されるものはどれか。\n\n  function f(n = 1) {\n    return n * 2;\n  }",
+      "choices": ["any", "number", "number | undefined", "void"],
+      "answer": 1,
+      "explanation": "デフォルト値から引数の型が number と推論され、戻り値も number になる。",
+      "ref": "第6章"
+    },
+    {
+      "id": "function-03",
+      "question": "レストパラメータの正しい書き方はどれか。",
+      "choices": [
+        "function f(...args: number[]) {}",
+        "function f(args: ...number) {}",
+        "function f(...args: number) {}",
+        "function f(args[]: number) {}"
+      ],
+      "answer": 0,
+      "explanation": "レストパラメータは配列型で受ける。タプル型を使えば引数ごとに違う型も表現できる。",
+      "ref": "第6章"
+    },
+    {
+      "id": "function-04",
+      "question": "関数オーバーロードについて正しいものはどれか。",
+      "choices": [
+        "実装シグネチャも外部から呼び出せる",
+        "実装シグネチャは呼び出し候補にならず、宣言したシグネチャだけが使える",
+        "オーバーロードは 2 つまでしか書けない",
+        "実装シグネチャは省略できる"
+      ],
+      "answer": 1,
+      "explanation": "実装シグネチャは中身を書くためのもの。呼び出し側から見えるのは、上に並べたシグネチャだけ。",
+      "ref": "第6章"
+    },
+    {
+      "id": "function-05",
+      "question": "戻り値の型が void の関数について正しいものはどれか。",
+      "choices": [
+        "return 文を書くと必ずコンパイルエラーになる",
+        "値を返す関数を void を期待する場所に渡すことはできる",
+        "void は never と同じ意味である",
+        "void を返す関数は undefined を返せない"
+      ],
+      "answer": 1,
+      "explanation": "戻り値を無視する契約なので、値を返す関数を渡しても代入できる。配列の forEach に値を返す関数を渡せるのはこのため。",
+      "ref": "第6章"
+    },
+    {
+      "id": "function-06",
+      "question": "次の関数の戻り値の型として適切なものはどれか。\n\n  function fail(message: string) {\n    throw new Error(message);\n  }",
+      "choices": ["void", "never", "undefined", "unknown"],
+      "answer": 1,
+      "explanation": "正常に返ってこない関数の戻り値は never。void は「返るが値がない」で意味が違う。",
+      "ref": "第2章"
+    },
+    {
+      "id": "function-07",
+      "question": "次の呼び出しで T は何に推論されるか。\n\n  function first<T>(items: T[]): T | undefined {\n    return items[0];\n  }\n  const x = first(['a', 'b']);",
+      "choices": ["string", "'a' | 'b'", "unknown", "string[]"],
+      "answer": 0,
+      "explanation": "配列リテラルからは string[] と推論されるので T は string。x の型は string | undefined。",
+      "ref": "第8章"
+    },
+    {
+      "id": "function-08",
+      "question": "次のコードで n の型はどれか。\n\n  [1, 2, 3].map((n) => n * 2);",
+      "choices": ["any", "number", "unknown", "number | undefined"],
+      "answer": 1,
+      "explanation": "文脈から型が決まる（contextual typing）ので、コールバックの引数に注釈は要らない。",
+      "ref": "第6章"
+    },
+    {
+      "id": "function-09",
+      "question": "関数の第 1 引数に書く this パラメータの説明として正しいものはどれか。",
+      "choices": [
+        "実行時に引数として渡される",
+        "型検査のためだけの宣言で、実引数としては数えない",
+        "アロー関数でも使える",
+        "必ず any 型になる"
+      ],
+      "answer": 1,
+      "explanation": "this パラメータは呼び出し時の this の型を宣言するためのもの。出力される JavaScript には残らない。",
+      "ref": "第7章"
+    },
+    {
+      "id": "function-10",
+      "question": "「number を受け取り string を返す関数」の型として正しいものはどれか。",
+      "choices": [
+        "(a: number) => string",
+        "function(a: number): string",
+        "(a: number): string",
+        "number => string"
+      ],
+      "answer": 0,
+      "explanation": "関数型はアロー記法で書く。オブジェクト型のメンバーとして書くときは { (a: number): string } の形も使える。",
+      "ref": "第6章"
+    }
+  ]
+}

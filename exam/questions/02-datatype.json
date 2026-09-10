@@ -1,0 +1,126 @@
+{
+  "field": "datatype",
+  "label": "データ型",
+  "questions": [
+    {
+      "id": "datatype-01",
+      "question": "any と unknown の違いとして正しいものはどれか。",
+      "choices": [
+        "unknown はどんな操作も検査なしで許す",
+        "any は絞り込まないと使えないが unknown はそのまま使える",
+        "unknown は絞り込むまでプロパティ参照やメソッド呼び出しができない",
+        "any と unknown は完全に同じ意味である"
+      ],
+      "answer": 2,
+      "explanation": "unknown は「何か分からない」型で、絞り込むまで触れない。any は型検査そのものを捨てる型。",
+      "ref": "第2章"
+    },
+    {
+      "id": "datatype-02",
+      "question": "never 型の説明として正しいものはどれか。",
+      "choices": [
+        "null と undefined だけを表す型",
+        "値をひとつも持たない型",
+        "すべての値を表す型",
+        "any の別名"
+      ],
+      "answer": 1,
+      "explanation": "never は空集合。だからあらゆる型に代入でき、網羅性チェックに使える。",
+      "ref": "第2章"
+    },
+    {
+      "id": "datatype-03",
+      "question": "次のコードの結果はどれか。\n\n  const pair: [string, number] = ['a'];",
+      "choices": [
+        "要素数が足りずコンパイルエラー",
+        "number が undefined で埋められて通る",
+        "実行時にだけ落ちる",
+        "['a'] が ['a', 0] に補完される"
+      ],
+      "answer": 0,
+      "explanation": "タプルは要素数と位置ごとの型を固定する。長さが違えばコンパイルエラー。",
+      "ref": "第5章"
+    },
+    {
+      "id": "datatype-04",
+      "question": "次の型の age プロパティの型はどれか。\n\n  type User = { name: string; age?: number };",
+      "choices": ["number", "number | null", "number | undefined", "any"],
+      "answer": 2,
+      "explanation": "オプショナルプロパティはその型と undefined のユニオンになる。null は含まれない。",
+      "ref": "第4章"
+    },
+    {
+      "id": "datatype-05",
+      "question": "次のコードの結果はどれか。\n\n  const nums: readonly number[] = [1, 2];\n  nums.push(3);",
+      "choices": [
+        "push が存在せずコンパイルエラー",
+        "実行時に例外が出る",
+        "問題なく 3 が追加される",
+        "nums が number[] に変わる"
+      ],
+      "answer": 0,
+      "explanation": "readonly 配列には push や pop などの変更系メソッドが無い。型の上で読み取り専用になる。",
+      "ref": "第5章"
+    },
+    {
+      "id": "datatype-06",
+      "question": "value の型が string | number のとき、絞り込まずに呼べるものはどれか。",
+      "choices": ["value.toUpperCase()", "value.toFixed(2)", "value.toString()", "value.length"],
+      "answer": 2,
+      "explanation": "ユニオン型に対しては、すべてのメンバーが共通して持つメンバーだけ使える。",
+      "ref": "第3章"
+    },
+    {
+      "id": "datatype-07",
+      "question": "A & B（インターセクション型）の説明として正しいものはどれか。",
+      "choices": [
+        "A か B のどちらかを満たせばよい",
+        "A と B の両方を同時に満たす必要がある",
+        "A と B の共通プロパティだけを持つ",
+        "A を B で上書きする"
+      ],
+      "answer": 1,
+      "explanation": "インターセクションは両方の要求を満たす型。プロパティは合算される。",
+      "ref": "第4章"
+    },
+    {
+      "id": "datatype-08",
+      "question": "Partial<User> の説明として正しいものはどれか。",
+      "choices": [
+        "すべてのプロパティを必須にする",
+        "すべてのプロパティを省略可能にする",
+        "すべてのプロパティを readonly にする",
+        "一部のプロパティだけを取り出す"
+      ],
+      "answer": 1,
+      "explanation": "Partial<T> は全プロパティに ? を付ける。必須化は Required、読み取り専用化は Readonly。",
+      "ref": "第10章"
+    },
+    {
+      "id": "datatype-09",
+      "question": "Record<'a' | 'b', number> と同じ意味の型はどれか。",
+      "choices": [
+        "{ a: number; b: number }",
+        "{ a?: number; b?: number }",
+        "{ [key: string]: number }",
+        "['a' | 'b', number]"
+      ],
+      "answer": 0,
+      "explanation": "Record<K, V> はキー K それぞれに値 V を持つオブジェクト型を作る。",
+      "ref": "第10章"
+    },
+    {
+      "id": "datatype-10",
+      "question": "unknown 型の値を string として安全に扱う方法はどれか。",
+      "choices": [
+        "as string でキャストする",
+        "any に代入し直す",
+        "typeof で string か調べてから使う",
+        "! を付けて非 null アサーションする"
+      ],
+      "answer": 2,
+      "explanation": "as はコンパイラを黙らせるだけで実行時の保証はない。typeof による絞り込みが正解。",
+      "ref": "第2章"
+    }
+  ]
+}

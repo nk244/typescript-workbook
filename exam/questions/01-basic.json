@@ -1,0 +1,106 @@
+{
+  "field": "basic",
+  "label": "基本文法",
+  "questions": [
+    {
+      "id": "basic-01",
+      "question": "次の変数の推論される型はどれか。\n\n  let count = 3;",
+      "choices": ["3", "number", "any", "unknown"],
+      "answer": 1,
+      "explanation": "let は再代入されうるので、リテラル型 3 から number へ広げられる（widening）。const なら 3 のまま。",
+      "ref": "第1章"
+    },
+    {
+      "id": "basic-02",
+      "question": "次の変数の推論される型はどれか。\n\n  const count = 3;",
+      "choices": ["3", "number", "readonly number", "never"],
+      "answer": 0,
+      "explanation": "const は再代入されないので、リテラル型 3 まで絞られる。",
+      "ref": "第1章"
+    },
+    {
+      "id": "basic-03",
+      "question": "次の tags の型はどれか。\n\n  const tags = ['a', 'b'] as const;",
+      "choices": ["string[]", "('a' | 'b')[]", "readonly ['a', 'b']", "['a', 'b']"],
+      "answer": 2,
+      "explanation": "as const は配列をタプルにし、readonly を付け、要素をリテラル型に固定する。",
+      "ref": "第5章"
+    },
+    {
+      "id": "basic-04",
+      "question": "type と interface の違いとして正しいものはどれか。",
+      "choices": [
+        "interface は同名を再宣言すると宣言マージされるが、type はエラーになる",
+        "type はオブジェクト型を表現できない",
+        "interface はユニオン型を定義できる",
+        "type は extends による拡張が一切できない"
+      ],
+      "answer": 0,
+      "explanation": "宣言マージは interface だけの性質。ユニオン型や条件型は type にしか書けない。",
+      "ref": "第4章"
+    },
+    {
+      "id": "basic-05",
+      "question": "次のコードで Color.Green の値はどれか。\n\n  enum Color { Red, Green, Blue }",
+      "choices": ["0", "1", "'Green'", "undefined"],
+      "answer": 1,
+      "explanation": "数値 enum は 0 から自動採番されるので Red=0、Green=1、Blue=2。",
+      "ref": "第4章"
+    },
+    {
+      "id": "basic-06",
+      "question": "import type の説明として正しいものはどれか。",
+      "choices": [
+        "型だけを取り込み、コンパイル後の JavaScript からは消える",
+        "値と型の両方を取り込む",
+        "実行時に型情報を保持したまま出力される",
+        "循環参照を自動で解決する"
+      ],
+      "answer": 0,
+      "explanation": "import type は型専用の取り込み。出力から確実に消えるので、不要な副作用を持ち込まずに済む。",
+      "ref": "第15章"
+    },
+    {
+      "id": "basic-07",
+      "question": "tsconfig.json の strict: true を有効にしたとき、同時に有効になるものはどれか。",
+      "choices": ["allowJs", "strictNullChecks", "skipLibCheck", "noEmit"],
+      "answer": 1,
+      "explanation": "strict は strictNullChecks や noImplicitAny などをまとめて有効にする。他の 3 つは strict とは無関係。",
+      "ref": "第18章"
+    },
+    {
+      "id": "basic-08",
+      "question": "次のコードの結果はどれか。\n\n  type Status = 'open' | 'closed';\n  const s: Status = 'pending';",
+      "choices": [
+        "コンパイルエラーになる",
+        "実行時に例外が出る",
+        "s の型が string に広がって通る",
+        "警告は出るがコンパイルは通る"
+      ],
+      "answer": 0,
+      "explanation": "リテラル型のユニオンは列挙された値しか受け付けない。'pending' は代入できない。",
+      "ref": "第3章"
+    },
+    {
+      "id": "basic-09",
+      "question": "次の型に代入できる値はどれか。\n\n  type Key = `user_${string}`;",
+      "choices": ["'user'", "'user_42'", "'admin_42'", "'USER_42'"],
+      "answer": 1,
+      "explanation": "テンプレートリテラル型は文字列の形を型で表す。user_ で始まる文字列だけが代入できる。",
+      "ref": "第13章"
+    },
+    {
+      "id": "basic-10",
+      "question": "TypeScript の型注釈について正しい説明はどれか。",
+      "choices": [
+        "型注釈は実行時のチェックに使われる",
+        "型注釈はコンパイル時に消え、実行時には残らない",
+        "型注釈があると実行速度が速くなる",
+        "型注釈は JavaScript の構文としても有効である"
+      ],
+      "answer": 1,
+      "explanation": "型は消える（type erasure）。実行時に検査したいなら typeof や検証コードを自分で書く。",
+      "ref": "第1章"
+    }
+  ]
+}

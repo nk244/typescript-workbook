@@ -1,0 +1,136 @@
+{
+  "field": "class",
+  "label": "クラスとオブジェクト",
+  "questions": [
+    {
+      "id": "class-01",
+      "question": "TypeScript の private 修飾子と、JavaScript の #private フィールドの違いはどれか。",
+      "choices": [
+        "private はコンパイル時のみの制約で、実行時には外から触れてしまう",
+        "private は実行時にもアクセスを禁止する",
+        "#private はコンパイル時のみの制約である",
+        "両者に違いはない"
+      ],
+      "answer": 0,
+      "explanation": "private は型検査だけの制約。実行時にも隠したいなら #name を使う。",
+      "ref": "第7章"
+    },
+    {
+      "id": "class-02",
+      "question": "次のコードの説明として正しいものはどれか。\n\n  class P {\n    constructor(private readonly id: string) {}\n  }",
+      "choices": [
+        "id はコンストラクタ内でしか使えないローカル変数である",
+        "パラメータプロパティとして this.id が自動的に定義される",
+        "コンパイルエラーになる",
+        "id は public として公開される"
+      ],
+      "answer": 1,
+      "explanation": "引数に修飾子を付けると、宣言と代入を省略してプロパティが定義される（パラメータプロパティ）。",
+      "ref": "第7章"
+    },
+    {
+      "id": "class-03",
+      "question": "abstract クラスについて正しいものはどれか。",
+      "choices": [
+        "new で直接インスタンス化できる",
+        "abstract メソッドには実装を書かなければならない",
+        "直接インスタンス化できず、継承して使う",
+        "interface と完全に同じものである"
+      ],
+      "answer": 2,
+      "explanation": "abstract クラスは継承前提。abstract メンバーはサブクラスでの実装を強制する。",
+      "ref": "第7章"
+    },
+    {
+      "id": "class-04",
+      "question": "implements と extends の違いとして正しいものはどれか。",
+      "choices": [
+        "implements は実装を継承し、extends は型だけを要求する",
+        "extends は実装を受け継ぎ、implements は型を満たしているかの検査だけを行う",
+        "どちらも複数指定できない",
+        "implements はクラスにしか指定できない"
+      ],
+      "answer": 1,
+      "explanation": "implements は「この形を満たしているか」の検査のみ。実装は自分で書く必要がある。",
+      "ref": "第7章"
+    },
+    {
+      "id": "class-05",
+      "question": "static メンバーの説明として正しいものはどれか。",
+      "choices": [
+        "インスタンスごとに 1 つずつ作られる",
+        "クラス自身に属し、インスタンスを作らずに使える",
+        "サブクラスからは参照できない",
+        "readonly を付けられない"
+      ],
+      "answer": 1,
+      "explanation": "static はクラス自体のメンバー。ClassName.member の形で使う。",
+      "ref": "第7章"
+    },
+    {
+      "id": "class-06",
+      "question": "readonly プロパティに値を代入できるのはどこか。",
+      "choices": [
+        "どこからでも代入できる",
+        "宣言時とコンストラクタの中だけ",
+        "メソッドの中だけ",
+        "サブクラスの中だけ"
+      ],
+      "answer": 1,
+      "explanation": "readonly は初期化のときだけ書き込める。以後の再代入はコンパイルエラー。",
+      "ref": "第7章"
+    },
+    {
+      "id": "class-07",
+      "question": "protected メンバーにアクセスできるのはどれか。",
+      "choices": [
+        "同じクラスとサブクラスの中",
+        "同じクラスの中だけ",
+        "どこからでも",
+        "同じファイルの中だけ"
+      ],
+      "answer": 0,
+      "explanation": "private は自クラスのみ、protected は継承先も可、public はどこからでも。",
+      "ref": "第7章"
+    },
+    {
+      "id": "class-08",
+      "question": "noImplicitOverride を有効にすると要求されることはどれか。",
+      "choices": [
+        "すべてのメソッドに abstract を付ける",
+        "親のメソッドを上書きするときに override を明示する",
+        "すべてのクラスに implements を付ける",
+        "継承を禁止する"
+      ],
+      "answer": 1,
+      "explanation": "override の付け忘れや、親側の改名による「上書きしているつもり」を検出できる。",
+      "ref": "第7章"
+    },
+    {
+      "id": "class-09",
+      "question": "クラスの getter について正しいものはどれか。",
+      "choices": [
+        "get キーワードで定義し、プロパティのようにアクセスする",
+        "必ず setter と対で定義しなければならない",
+        "戻り値の型は必ず any になる",
+        "メソッドとして foo() の形で呼び出す"
+      ],
+      "answer": 0,
+      "explanation": "getter は obj.value の形で読める。setter を書かなければ読み取り専用になる。",
+      "ref": "第7章"
+    },
+    {
+      "id": "class-10",
+      "question": "次のコードの結果はどれか。\n\n  class Point {\n    constructor(public x: number) {}\n  }\n  const p: Point = { x: 1 };",
+      "choices": [
+        "クラスのインスタンスではないのでエラー",
+        "構造が同じなので代入できる",
+        "実行時に例外が出る",
+        "コンストラクタを呼んでいないのでエラー"
+      ],
+      "answer": 1,
+      "explanation": "TypeScript は構造的部分型。形が合えばクラス由来かは問わない。ただし private や protected を持つクラスは別扱いになる。",
+      "ref": "第14章"
+    }
+  ]
+}
