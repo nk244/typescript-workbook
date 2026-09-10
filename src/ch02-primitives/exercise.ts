@@ -8,14 +8,14 @@ import type { Equal, Expect } from '../lib/type-test';
  * 引数の型は unknown のまま変えないこと。
  * ============================================================ */
 export function describeValue(value: unknown): string {
-  if (typeof(value) === 'string') {
+  if (typeof (value) === 'string') {
     return value.toUpperCase();
-  } else if (typeof(value) === 'number') {
+  } else if (typeof (value) === 'number') {
     return value.toString();
   } else {
     return '不明';
   }
-  throw new Error('not implemented');
+  // throw new Error('not implemented');
 }
 
 /* ============================================================
@@ -26,7 +26,7 @@ export function describeValue(value: unknown): string {
  * ============================================================ */
 export function displayName(name: string | null | undefined): string {
   return name || '名無し';
-  throw new Error('not implemented');
+  // throw new Error('not implemented');
 }
 
 /* ============================================================

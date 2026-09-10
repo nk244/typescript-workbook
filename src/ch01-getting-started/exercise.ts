@@ -8,7 +8,7 @@ import type { Equal, Expect } from '../lib/type-test';
 export function withTax(price: number /* TODO: number にする */) {
   // TODO: 実装する
   return Math.floor(price * 1.1);
-  throw new Error('not implemented');
+  // throw new Error('not implemented');
 }
 
 /* ============================================================
@@ -19,7 +19,7 @@ export function withTax(price: number /* TODO: number にする */) {
 export function greet(name: string /* TODO */) /* TODO: 戻り値の型 */ {
   // TODO: 実装する
   return name + "さん、こんにちは";
-  throw new Error('not implemented');
+  // throw new Error('not implemented');
 }
 
 /* ============================================================

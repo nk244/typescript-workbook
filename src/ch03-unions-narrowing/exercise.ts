@@ -6,7 +6,10 @@ import type { Equal, Expect } from '../lib/type-test';
  * 変換できない文字列（NaN になる）は 0 を返すこと。
  * ============================================================ */
 export function toNumber(input: string | number): number {
-  throw new Error('not implemented');
+  if (typeof input === "number") return input;
+  const parsed = Number(input);
+  return isNaN(parsed) ? 0 : parsed;
+  // throw new Error('not implemented');
 }
 
 /* ============================================================
@@ -15,10 +18,11 @@ export function toNumber(input: string | number): number {
  * OrderStatus 型を定義し、canCancel を実装してください。
  * キャンセルできるのは pending と shipped のときだけです。
  * ============================================================ */
-export type OrderStatus = string; // TODO: リテラル型のユニオンに書き換える
+export type OrderStatus = "pending" | "shipped" | "delivered" | "cancelled"; // TODO: リテラル型のユニオンに書き換える
 
 export function canCancel(status: OrderStatus): boolean {
-  throw new Error('not implemented');
+  return status == "pending" || status === "shipped"
+  // throw new Error('not implemented');
 }
 
 // 型が正しく定義できていれば、このテストが通る
@@ -30,7 +34,12 @@ export type _t1 = Expect<Equal<OrderStatus, 'pending' | 'shipped' | 'delivered' 
  * for でも reduce でもよい。
  * ============================================================ */
 export function sum(items: number[] | null): number {
-  throw new Error('not implemented');
+  if (items == null || items.length == 0) {
+    return 0;
+  } else {
+    return items.reduce((acc, cur) => acc + cur, 0);
+  }
+  // throw new Error('not implemented');
 }
 
 /* ============================================================
@@ -42,7 +51,9 @@ export type Dog = { name: string; bark: () => string };
 export type Cat = { name: string; meow: () => string };
 
 export function speak(animal: Dog | Cat): string {
-  throw new Error('not implemented');
+  if ("bark" in animal) return "ワン";
+  return "ニャー";
+  // throw new Error('not implemented');
 }
 
 /* ============================================================
@@ -52,9 +63,10 @@ export function speak(animal: Dog | Cat): string {
  * 「ローカル定数に取り出す」書き方で直してください。
  * ============================================================ */
 export function formatLater(user: { name: string | null }): () => string {
-  if (user.name !== null) {
+  const name = user.name;
+  if (name !== null) {
     // ここでエラーになる: 絞り込みはコールバックの中まで持ち越せない
-    return () => user.name.toUpperCase();
+    return () => name.toUpperCase();
   }
   return () => 'ANONYMOUS';
 }
@@ -66,5 +78,12 @@ export function formatLater(user: { name: string | null }): () => string {
  * それ以外は '不明なエラー' を返してください。
  * ============================================================ */
 export function toMessage(error: unknown): string {
-  throw new Error('not implemented');
+  if (error instanceof Error) {
+    return error.message;
+  } else if (typeof error == "string") {
+    return error;
+  } else {
+    return "不明なエラー";
+  }
+  // throw new Error('not implemented');
 }
