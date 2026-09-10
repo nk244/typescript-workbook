@@ -5,6 +5,10 @@
  *
  *   node scripts/verify-solutions.mjs           全章
  *   node scripts/verify-solutions.mjs 03 ex02   指定した章だけ
+ *   node scripts/verify-solutions.mjs --keep    検証後も verify-tmp/ を残す（失敗の調査用）
+ *
+ * verify-tmp/ には解答例が展開される。終了時に必ず消すこと。
+ * 残したままにすると、エディタの全文検索に解答例が引っかかってしまう。
  */
 import { cpSync, existsSync, mkdirSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
@@ -13,7 +17,8 @@ import { fileURLToPath } from 'node:url';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const verifyDir = join(root, 'verify-tmp');
-const args = process.argv.slice(2);
+const args = process.argv.slice(2).filter((a) => !a.startsWith('-'));
+const keep = process.argv.slice(2).includes('--keep');
 const DIR_PATTERN = /^(ch|ex)\d\d/;
 
 function normalize(arg) {
@@ -32,6 +37,16 @@ const chapters = readdirSync(join(root, 'src'), { withFileTypes: true })
   .filter((c) => (keys.length === 0 ? true : keys.some((k) => c.startsWith(k))))
   .sort();
 
+const tmpConfig = join(root, 'tsconfig.verify.json');
+
+/** 一時ファイルの後始末。process.exit() でも走るように exit イベントに載せる */
+function cleanup() {
+  if (keep) return;
+  rmSync(verifyDir, { recursive: true, force: true });
+  rmSync(tmpConfig, { force: true });
+}
+process.on('exit', cleanup);
+
 rmSync(verifyDir, { recursive: true, force: true });
 mkdirSync(verifyDir, { recursive: true });
 cpSync(join(root, 'src', 'lib'), join(verifyDir, 'lib'), { recursive: true });
@@ -45,7 +60,7 @@ for (const ch of chapters) {
 }
 
 writeFileSync(
-  join(root, 'tsconfig.verify.json'),
+  tmpConfig,
   JSON.stringify({ extends: './tsconfig.json', include: ['verify-tmp'] }, null, 2),
 );
 
@@ -55,6 +70,7 @@ const opts = { cwd: root, stdio: 'inherit', shell: process.platform === 'win32' 
 const tsc = spawnSync(npx, ['tsc', '-p', 'tsconfig.verify.json'], opts);
 if (tsc.status !== 0) {
   console.log('\n❌ 解答例の型チェックに失敗');
+  console.log('   調べるときは --keep を付けて再実行すると verify-tmp/ が残ります。');
   process.exit(1);
 }
 console.log('✅ 解答例の型チェック OK');
