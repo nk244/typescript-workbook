@@ -17,7 +17,7 @@ React と型レベルプログラミングまでひと通り到達します。
 - **教材自体の回帰テスト** — `scripts/verify-solutions.mjs` が解答例を演習に流し込んで
   全 240 テストを実行し、教材が壊れていないことを検証する
 - **1 コマンドの採点** — `npm run check <章>` が 型チェック → テスト → Lint を順に実行する
-- **CI** — GitHub Actions で `tsc --noEmit` / ESLint / テストを回す
+- **CI** — GitHub Actions で `verify:solutions` と ESLint を回し、教材が壊れていないことを検証する
 
 ---
 

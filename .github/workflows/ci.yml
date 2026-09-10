@@ -1,10 +1,18 @@
-# 第23章で説明している CI の実例。GitHub に置けばそのまま動きます。
+# この教材リポジトリ自身の CI。
+#
+# 第23章で説明している最小構成（tsc --noEmit / lint / test を全体にかける）とは、
+# わざと違う形にしてあります。src/ の演習は解き終わるまでコンパイルエラーで、
+# 第23章の lint-me.ts は直すまで Lint エラーが出る作りだからです。
+# つまり src/ を CI にかけると「学習が終わるまで永久に赤」になります。
+#
+# ここで守りたいのは学習の進捗ではなく、教材そのものが壊れていないこと。
+# なので解答例を演習に流し込んで型チェックとテストを回します（npm run verify:solutions）。
 name: CI
 
 on: [push, pull_request]
 
 jobs:
-  check:
+  verify:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -13,9 +21,7 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - name: 型チェック
-        run: npx tsc --noEmit
-      - name: Lint
-        run: npm run lint
-      - name: テスト
-        run: npm test
+      - name: 教材の検証（解答例の型チェック + 全テスト）
+        run: npm run verify:solutions
+      - name: Lint（解答例）
+        run: npx eslint solutions
