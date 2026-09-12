@@ -112,6 +112,63 @@ type Json =
   | { [key: string]: Json };
 ```
 
+### 再帰的な型は再帰関数で歩く
+
+自分自身を呼ぶときは、**必ず一段小さい値を渡す**のが鉄則です。
+同じ値を渡すと無限再帰になり、`Maximum call stack size exceeded` で落ちます。
+
+```ts
+type NestedNumbers = number | NestedNumbers[];
+
+function total(value: NestedNumbers): number {
+  if (Array.isArray(value)) {
+    return value.reduce((sum, child) => sum + total(child), 0); // 中身を渡す
+  }
+  return value; // 基底ケース。ここで再帰が止まる
+}
+
+total([1, [2, [3, 4]]]); // 10
+```
+
+### 絞り込みは `value` 自身に書く
+
+型で処理を分けるときは、条件に `value` そのものを書いてください。
+`typeof` の結果を変数に入れると、その変数と `value` のつながりは切れます。
+
+```ts
+const type = typeof value;
+if (type === 'object') {
+  // value は絞り込まれない。エラーは value 側に出る
+}
+
+if (typeof value === 'object') {
+  // value が絞り込まれる
+}
+```
+
+`null` は `typeof` では見分けられません（`typeof null` は `'object'`）。
+`value === null` と書きます。
+
+`||` でつないだ条件は、両方の枝の合計になります。
+片方だけが絞り込んでも、もう片方が何も絞り込まなければ全体では絞り込めません。
+
+### 中身の取り出しかた
+
+配列とオブジェクトは取り出し方が違うので、枝も分けます。
+
+```ts
+value.map((child) => f(child));                 // 配列の要素
+Object.values(value).map((child) => f(child));  // オブジェクトの値
+```
+
+`Math.max` は配列ではなく引数の並びを受け取ります。配列は `...` で展開します。
+
+```ts
+Math.max([1, 2, 3]);     // NaN（配列は数値にならない）
+Math.max(...[1, 2, 3]);  // 3
+Math.max();              // -Infinity（空のときに注意）
+```
+
 ---
 
 ## 演習

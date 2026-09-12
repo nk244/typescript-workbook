@@ -10,7 +10,11 @@ import type { Equal, Expect } from '../lib/type-test';
  *   - tags: string の配列
  * ============================================================ */
 export type Book = {
-  // TODO
+  readonly id: number;
+  title: string;
+  author: string;
+  publishedAt?: Date;
+  tags: string[];
 };
 
 // 型が正しければエラーが消える
@@ -33,7 +37,8 @@ export type _t1 = Expect<
  * なければ '未刊' を返してください。
  * ============================================================ */
 export function publishedYear(book: Book): string {
-  throw new Error('not implemented');
+  return book.publishedAt ? `${book.publishedAt.getFullYear()}年` : '未刊';
+  // throw new Error('not implemented');
 }
 
 /* ============================================================
@@ -42,10 +47,11 @@ export function publishedYear(book: Book): string {
  * Book と組み合わせた StoredBook を交差型で定義してください。
  * ============================================================ */
 export type Timestamps = {
-  // TODO
+  createdAt: Date;
+  updatedAt: Date;
 };
 
-export type StoredBook = unknown; // TODO: Book と Timestamps の交差型に
+export type StoredBook = Book & Timestamps; // TODO: Book と Timestamps の交差型に
 
 export type _t2 = Expect<Equal<StoredBook, Book & Timestamps>>;
 
@@ -73,7 +79,8 @@ export const EXCESS_LINE: 'a' | 'b' = 'a'; // TODO: 正しいほうに直す
 export type Scores = { [subject: string]: number };
 
 export function getScore(scores: Scores, subject: string): number {
-  throw new Error('not implemented');
+  return scores[subject] ?? 0;
+  // throw new Error('not implemented');
 }
 
 /* ============================================================
@@ -83,8 +90,21 @@ export function getScore(scores: Scores, subject: string): number {
  *   - 配列・オブジェクトは「中身の最大の深さ + 1」
  *   - 空の配列・空のオブジェクトは 1
  * ============================================================ */
-export type Json = unknown; // TODO
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | Json[]
+  | { [key: string]: Json };
 
 export function jsonDepth(value: Json): number {
-  throw new Error('not implemented');
+  if (typeof value === "string" || typeof value === "number" || typeof value === "boolean" || value === null) {
+    return 0;
+  } else if (Array.isArray(value)) {
+    return Math.max(0, ...value.map(jsonDepth)) + 1;
+  } else {
+    return Math.max(0, ...Object.values(value).map(jsonDepth)) + 1;
+  }
+  // throw new Error('not implemented');
 }
