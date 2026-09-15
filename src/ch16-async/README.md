@@ -94,10 +94,29 @@ for (const r of results) {
 
 // 最初に成功したものだけ
 const first = await Promise.any([a(), b()]);
+
+// 最初に「決着（成功でも失敗でも）」したものだけ
+const winner = await Promise.race([a(), b()]);
 ```
 
 `Promise.all` に**配列リテラルを直接渡すとタプルとして推論される**のがポイントです。
 一度変数に入れると `Promise<(User | Post[])[]>` になってしまうので注意。
+
+`Promise.race` は「タイムアウト」の実装によく使います。`new Promise<T>((resolve, reject) => ...)`
+で自作した Promise も、他の Promise と同じように `race` に混ぜられます。
+
+```ts
+function timeout(ms: number): Promise<never> {
+  return new Promise((_resolve, reject) => {
+    setTimeout(() => reject(new Error('timeout')), ms);
+  });
+}
+
+const result = await Promise.race([fetchUser(), timeout(3000)]);
+```
+
+`Promise<never>` は「絶対に resolve しない（reject するだけ）」ことを表します。
+`race` に混ぜても、成功する側の型（ここでは `User`）を邪魔しません。
 
 ## 5. よくある落とし穴
 

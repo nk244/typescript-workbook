@@ -61,6 +61,26 @@ TypeScript は `import './legacy-lib'` を解決するとき、
 `legacy-lib.ts` → `legacy-lib.d.ts` の順で型を探します。
 つまり **JS ファイルの隣に同名の .d.ts を置けば、型が付きます。**
 
+### クラスに型を付ける
+
+`declare class` でクラスにも型を付けられます。メソッドにジェネリクス（第8章）と
+`keyof`（第11章）を組み合わせると、「イベント名ごとに payload の型が変わる」ような
+API にも型を付けられます。
+
+```ts
+type Events = { login: { userId: string }; logout: undefined };
+
+declare class Bus<TEvents> {
+  on<K extends keyof TEvents>(event: K, handler: (payload: TEvents[K]) => void): void;
+}
+
+declare const bus: Bus<Events>;
+bus.on('login', (payload) => payload.userId);   // payload は { userId: string } に絞られる
+```
+
+`on` 自身が持つ型引数 `K` は、呼び出し時の第一引数（`event`）から推論されます。
+クラス全体の型引数 `TEvents` とは別物です。
+
 ## 4. @types パッケージ
 
 有名なライブラリの型定義は DefinitelyTyped というリポジトリに集約され、

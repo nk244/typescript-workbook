@@ -74,6 +74,10 @@ type UserGetters = Getters<User>;
 
 `as` の結果を `never` にすると、そのキーは消えます。
 
+`T[K] extends V ? never : K` の `? :` は「条件型」です（体系的には第12章）。
+ここでは「`T[K]` が `V` に代入できるならそのキーを消す（`never`）、そうでなければ
+キー名をそのまま残す」とだけ読めれば十分です。
+
 ```ts
 type OmitByValue<T, V> = {
   [K in keyof T as T[K] extends V ? never : K]: T[K];
@@ -117,6 +121,8 @@ type DeepReadonly<T> = {
 };
 ```
 
+ここでも `extends ? :`（条件型、第12章）を使っています。「`T[K]` がオブジェクトなら
+再帰的に `DeepReadonly` をかけ、そうでなければそのまま」という意味です。
 再帰も書けます（演習でやります）。
 
 ## 6. 注意: 分配と情報の消失

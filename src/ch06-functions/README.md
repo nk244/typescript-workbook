@@ -94,6 +94,9 @@ const b = parse(1);     // number[]
 
 ## 5. 関数を受け取る関数（高階関数）
 
+`<T>` は**ジェネリクス**（型の引数）です。体系的には第8章で扱いますが、ここでは
+「呼び出しごとに決まる型のプレースホルダ」とだけ思っておけば読めます。
+
 ```ts
 function retry<T>(fn: () => T, times: number): T {
   let lastError: unknown;
