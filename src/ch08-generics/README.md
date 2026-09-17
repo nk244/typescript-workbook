@@ -87,6 +87,20 @@ prop(user, 'xxx');    // エラー: 'xxx' は keyof user ではない
 `T[K]` は「T の K に対応する値の型」を取り出す**インデックスアクセス型**です。
 この 2 つを組み合わせると、**キーと値の対応をコンパイラに追跡させられます。**
 
+`K` が複数のキーのユニオンなら、`{ [P in K]: T[P] }` という書き方で
+「K の各キーを持ち、値は元の型のまま」というオブジェクト型を作れます。
+
+```ts
+function pickSome<T extends object, K extends keyof T>(obj: T, keys: K[]): { [P in K]: T[P] } {
+  const out = {} as { [P in K]: T[P] };
+  for (const key of keys) out[key] = obj[key];
+  return out;
+}
+```
+
+`[P in K]` は「K に含まれる各キー P について」という意味のループです
+（これを体系的に扱うのが第11章の Mapped Types）。
+
 ## 4. デフォルト型引数
 
 ```ts

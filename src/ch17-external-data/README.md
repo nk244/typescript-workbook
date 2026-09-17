@@ -50,6 +50,17 @@ const userSchema = v.object({
 type User = Infer<typeof userSchema>;   // { id: number; name: string }
 ```
 
+`Infer<V>` 自体は、第12章の `infer` を**自分で定義した型**（組み込みの `Promise` や配列ではなく）に使うだけです。
+
+```ts
+type Validator<T> = { parse: (value: unknown) => T };
+
+type Infer<V> = V extends Validator<infer T> ? T : never;
+```
+
+「`V` が `Validator<なにか>` の形をしているなら、その『なにか』を `T` として取り出す」という、
+これまでと同じパターンです。
+
 これが **zod / valibot / arktype** といったライブラリの発想です。
 演習では、この仕組みのミニ版を自分で作ります。**作ると原理が完全に分かります。**
 

@@ -97,6 +97,26 @@ type FirstArg<F> = F extends (first: infer A, ...rest: never[]) => unknown ? A :
 type FirstString<T> = T extends [infer S extends string, ...unknown[]] ? S : never;
 ```
 
+### 引数が 0 個の関数と区別する
+
+`(first: infer A, ...rest: never[]) => unknown` のように直接マッチさせると、
+「引数は少なくてよい」（第6章）の規則のせいで、引数 0 個の関数もマッチしてしまい、
+`A` が意図しない型に推論されることがあります。**「引数があるかどうか」を確実に区別したい**ときは、
+まず引数リストをタプルごと `infer` で取り出してから、タプルの形で分岐します。
+
+```ts
+type FirstParamSafe<F> = F extends (...args: infer P) => unknown
+  ? P extends [infer A, ...unknown[]]
+    ? A       // 1 個以上ある
+    : never   // 0 個
+  : never;
+
+type X = FirstParamSafe<(name: string) => void>;   // string
+type Y = FirstParamSafe<() => void>;                // never
+```
+
+`P extends [infer A, ...unknown[]]` は「P というタプルの先頭を A として取り出せるか（＝要素が 1 個以上あるか）」という判定です。
+
 ## 4. 再帰的な条件型
 
 タプルの操作は再帰で書きます。
