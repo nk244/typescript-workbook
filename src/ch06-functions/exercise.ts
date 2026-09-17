@@ -6,9 +6,9 @@ import type { Equal, Expect } from '../lib/type-test';
  * 空文字でないことを検査する notEmpty を実装してください。
  * notEmpty には引数の型注釈を書かないこと（文脈から推論されるはず）。
  * ============================================================ */
-export type Validator = unknown; // TODO
+export type Validator = (string: string) => boolean;
 
-export const notEmpty: Validator = null as never; // TODO: 関数を書く
+export const notEmpty: Validator = (string) => string !== "";
 
 export type _t1 = Expect<Equal<Validator, (value: string) => boolean>>;
 
@@ -18,17 +18,34 @@ export type _t1 = Expect<Equal<Validator, (value: string) => boolean>>;
  *   polite が true なら 'ken 様' 、省略時や false なら 'ken さん'
  * ============================================================ */
 export function greet(options: { name: string; polite?: boolean }): string {
-  throw new Error('not implemented');
+  if (options['polite']) {
+    return `${options["name"]} 様`;
+  } else {
+    return `${options["name"]} さん`;
+  }
+  // throw new Error('not implemented');
 }
 
 /* ============================================================
  * 演習 6-3: 高階関数を作る
  * 関数 fn を「一度しか実行しない」関数に変換する once を実装してください。
- * 2 回目以降は 1 回目の結果を返します。
- * 型は変えずに実装だけ書くこと。
+ * 1 回目の呼び出しで fn を実行して結果を返し、2 回目以降は fn を再実行せず
+ * 1 回目の結果を返します。
+ * 型（シグネチャ）は変えずに、関数本体だけを書き換えること。
+ * 実行済みかどうかや結果を覚えておく変数は、once の関数本体の中
+ * （＝ once が呼ばれるたびに新しく作られるスコープ）に置くこと。
+ * 変数名・実装方法（クロージャの持たせ方）は自由。
  * ============================================================ */
 export function once<T>(fn: () => T): () => T {
-  throw new Error('not implemented');
+  let called = false;
+  let ret: T;
+  return () => {
+    if (!called) {
+      called = true;
+      ret = fn();
+    }
+    return ret;
+  }
 }
 
 /* ============================================================
@@ -38,7 +55,8 @@ export function once<T>(fn: () => T): () => T {
  * 呼び出し側で引数に型注釈を書かなくて済むようにすること。
  * ============================================================ */
 export function myMap<T, U>(items: readonly T[], fn: (item: T, index: number) => U): U[] {
-  throw new Error('not implemented');
+  return items.map((item, index) => fn(item, index));
+  // throw new Error('not implemented');
 }
 
 /* ============================================================
@@ -47,6 +65,8 @@ export function myMap<T, U>(items: readonly T[], fn: (item: T, index: number) =>
  * オーバーロードで宣言してください（実装シグネチャは書いてあります）。
  * ============================================================ */
 // TODO: ここにオーバーロードの宣言を 2 行書く
+export function len(input: string): number;
+export function len(input: string[]): number;
 
 export function len(input: string | string[]): number {
   if (typeof input === 'string') return input.length;
@@ -63,10 +83,10 @@ export type _t2 = Expect<Equal<ReturnType<typeof len>, number>>;
 type Handler = (event: string, index: number) => void;
 
 // (event: string) => void を Handler に代入できるか？
-export const CAN_ASSIGN_FEWER_ARGS: boolean = false; // TODO
+export const CAN_ASSIGN_FEWER_ARGS: boolean = true;
 // (event: string, index: number, extra: boolean) => void を代入できるか？
-export const CAN_ASSIGN_MORE_ARGS: boolean = false; // TODO
+export const CAN_ASSIGN_MORE_ARGS: boolean = false;
 // (event: string, index: number) => number を代入できるか？（戻り値が void 期待）
-export const CAN_ASSIGN_RETURNING_VALUE: boolean = false; // TODO
+export const CAN_ASSIGN_RETURNING_VALUE: boolean = true;
 
 export type _unusedHandler = Handler;
