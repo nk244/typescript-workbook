@@ -5,9 +5,10 @@ import type { Equal, Expect } from '../lib/type-test';
  * 配列の最後の要素を返す last を実装してください。
  * 空配列なら undefined を返します。
  * ============================================================ */
-export function last(items: unknown): unknown {
+export function last<T>(items: T[]): T | undefined {
   // TODO: シグネチャをジェネリックに書き換えて実装する
-  throw new Error('not implemented');
+  return items.at(-1);
+  // throw new Error('not implemented');
 }
 
 export type _t1 = Expect<Equal<ReturnType<typeof last<number>>, number | undefined>>;
@@ -17,9 +18,10 @@ export type _t1 = Expect<Equal<ReturnType<typeof last<number>>, number | undefin
  * 2 つの値のうち length が大きいほうを返す longest を実装してください。
  * length を持つものだけを受け取れるようにすること。
  * ============================================================ */
-export function longest<T>(a: T, b: T): T {
+export function longest<T extends { length: number }>(a: T, b: T): T {
   // TODO: T に制約をつけて実装する
-  throw new Error('not implemented');
+  return a.length > b.length ? a : b;
+  // throw new Error('not implemented');
 }
 
 /* ============================================================
@@ -27,9 +29,10 @@ export function longest<T>(a: T, b: T): T {
  * オブジェクトから指定キーの値を取り出す pluck を実装してください。
  * 存在しないキーを渡すとコンパイルエラーになること。
  * ============================================================ */
-export function pluck(obj: unknown, key: unknown): unknown {
+export function pluck<T extends object, K extends keyof T>(obj: T, key: K): T[K] {
   // TODO
-  throw new Error('not implemented');
+  return obj[key];
+  // throw new Error('not implemented');
 }
 
 /* ============================================================
@@ -39,9 +42,12 @@ export function pluck(obj: unknown, key: unknown): unknown {
  * ヒント: Pick<T, K> という組み込み型があります（第10章）が、
  *        まずは自分で戻り値型を書いてみてください。
  * ============================================================ */
-export function pick(obj: unknown, keys: unknown): unknown {
+export function pick<T extends object, K extends keyof T>(obj: T, keys: K[]): { [P in K]: T[P] } {
   // TODO
-  throw new Error('not implemented');
+  const ret = {} as { [P in K]: T[P] };
+  keys.map(key => ret[key] = obj[key]);
+  return ret;
+  // throw new Error('not implemented');
 }
 
 /* ============================================================
@@ -49,11 +55,16 @@ export function pick(obj: unknown, keys: unknown): unknown {
  * 型安全なスタック Stack<T> を実装してください。
  *   - push(item): 積む
  *   - pop(): 取り出す（空なら undefined）
- *   - peek(): 見るだけ（空なら undefined）
+ *   - peek(): 最後に積んだ要素を、取り出さずに返す（空なら undefined）
  *   - size: 現在の要素数（getter）
  * ============================================================ */
 export class Stack<T> {
   // TODO
+  private items: T[] = [];
+  push(item: T): void { this.items.push(item) };
+  pop(): T | undefined { return this.items.pop(); };
+  peek(): T | undefined { return this.items.at(-1) };
+  get size(): number { return this.items.length };
 }
 
 /* ============================================================
@@ -63,7 +74,7 @@ export class Stack<T> {
  *   失敗: { ok: false; error: E }
  * E のデフォルトは Error にすること。
  * ============================================================ */
-export type Result<T, E = never> = unknown; // TODO
+export type Result<T, E = Error> = { ok: true, value: T } | { ok: false, error: E }; // TODO
 
 export type _t2 = Expect<
   Equal<Result<number>, { ok: true; value: number } | { ok: false; error: Error }>
@@ -77,6 +88,6 @@ export type _t3 = Expect<
  * 下の関数はジェネリクスにする意味がありません。
  * 型引数をなくして、同じことを unknown で書き直してください。
  * ============================================================ */
-export function debugLog<T>(value: T): void {
+export function debugLog(value: unknown): void {
   void value;
 }
