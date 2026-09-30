@@ -7,7 +7,7 @@ type ReadonlyUser = { readonly id: number; readonly name: string };
  * 演習 11-1: keyof と インデックスアクセス型
  * ============================================================ */
 export type UserKeys = unknown; // TODO: User のキーのユニオン
-export type UserValues = unknown; // TODO: User の値のユニオン（? は考慮しなくてよい）
+export type UserValues = unknown; // TODO: User の値のユニオン（email は省略可能なので undefined も含まれます）
 
 export type _t1 = Expect<Equal<UserKeys, 'id' | 'name' | 'email'>>;
 export type _t2 = Expect<Equal<UserValues, number | string | undefined>>;

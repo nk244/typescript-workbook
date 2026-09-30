@@ -22,7 +22,8 @@ export async function runSafely<T>(fn: () => Promise<T>): Promise<T | string> {
 /* ============================================================
  * 演習 16-3: Result 型を返す
  * Result 型を定義し、パースに成功したら数値、
- * 失敗したら 'invalid-number' を返す parseNumber を実装してください。
+ * 失敗（Number() に通すと NaN になる文字列）なら 'invalid-number' を返す
+ * parseNumber を実装してください。
  * ============================================================ */
 export type Result<T, E = Error> = unknown; // TODO
 

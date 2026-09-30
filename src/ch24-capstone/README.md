@@ -29,6 +29,8 @@ app.tsx     … React の UI
   - `add`（title と priority）/ `toggle`（id）/ `remove`（id）/ `setFilter`（filter）/ `clearDone`
 - `TaskState` は `{ tasks, filter, nextId }`
 - `taskReducer` は**純粋関数**。元の state を破壊しないこと。**網羅性チェックを入れること**
+  - アクションの判別子は `type`（例: `{ type: 'add', title, priority }`）
+  - `add` で作る Task の `id` は `String(state.nextId)`（`'1'`, `'2'`, …）、`done` は `false`。`nextId` は 1 進める
 - `visibleTasks(state)` は filter を適用した配列を返す（`all` / `active` / `done`）
 - `sortByPriority(tasks)` は high → normal → low の順に並べた**新しい配列**を返す
   （同じ優先度なら元の順序を保つ = 安定ソート）
@@ -38,17 +40,19 @@ app.tsx     … React の UI
 - `parseTasks(input: unknown)` は `Result<Task[], string>` を返す（第16・17章）
 - 配列でなければ `'expected array'`
 - 各要素が Task の形でなければ `'invalid task at N'`（N は 0 始まりの添字）
+  - `createdAt` が日付として解釈できない文字列のときも `'invalid task at N'`
 - `createdAt` は ISO 文字列で入ってくるので `Date` に変換すること
 
 ### UI（app.tsx）
 
 - `aria-label="new-task"` の入力欄と「追加」ボタン
+- 入力欄が空文字のときは追加しない
 - 追加時の優先度は `aria-label="priority"` の select から取る（既定 `normal`）
 - タスクは `<li>` で表示。タイトルをクリックすると done を反転
 - `<li>` には `data-priority` に優先度を入れる
 - done のタスクの `<li>` に `data-done="true"`
 - フィルタボタン（`すべて` / `未完了` / `完了`）
-- 残り件数を `<p data-testid="summary">残り N 件</p>` で表示
+- 残り件数を `<p data-testid="summary">残り N 件</p>` で表示（N は、フィルタに関係なく全タスクのうち未完了の数）
 
 ## 進め方
 

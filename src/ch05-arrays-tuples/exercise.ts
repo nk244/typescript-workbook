@@ -2,12 +2,14 @@ import type { Equal, Expect } from '../lib/type-test';
 
 /* ============================================================
  * 演習 5-1: readonly 配列を受け取る
- * 引数を破壊せずに、昇順に並べた新しい配列を返してください。
+ * 引数を破壊せずに、数値の昇順（小さい順）に並べた新しい配列を返してください。
  * 引数の型は readonly のまま（sort は破壊的なので直接呼べません）。
+ * ※ sort() に比較関数を渡さないと、要素が「文字列として」辞書順に並びます。
+ *   数値の大小で並べるには比較関数 (a, b) => a - b を渡します。
  * ============================================================ */
 export function sorted(items: readonly number[]): number[] {
   const sortedItems: number[] = [...items];
-  return sortedItems.sort();
+  return sortedItems.sort((a, b) => a - b);
   // throw new Error('not implemented');
 }
 

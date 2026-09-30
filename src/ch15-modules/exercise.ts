@@ -43,7 +43,9 @@ export type _t4 = Expect<Equal<typeof VERSION, string>>;
 /* ============================================================
  * 演習 15-5: グローバルに型を足す
  * globals.d.ts を作って、window.__appVersion: string を宣言してください。
- * （このファイルには何も書かなくて構いません。globals.d.ts を新規作成する）
+ * （このファイルには何も書かなくて構いません。この演習と同じフォルダ
+ *   src/ch15-modules/ に globals.d.ts を新規作成してください。
+ *   書き方は README の「アンビエント宣言」の節を参照）
  * 宣言できたら true にしてください。
  * ============================================================ */
 export const GLOBAL_DECLARED = false; // TODO

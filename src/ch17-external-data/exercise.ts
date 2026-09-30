@@ -38,6 +38,10 @@ export function safeJsonParse(text: string): Result<unknown, 'invalid-json'> {
  *   配列の要素が違う  : `[1] expected string but got number`
  *   オブジェクトの項目: `name: expected string but got number`
  *   キーがない        : `name: expected string but got undefined`
+ *   入れ子の場合は先頭に項目名/位置を足していく:
+ *                       `tags: [0] expected string but got number`
+ *   オブジェクトでない: `expected object but got null`（配列でない場合は `expected array but got string`）
+ *   配列の添字は 0 始まり。
  * ============================================================ */
 export type Validator<T> = {
   parse: (value: unknown) => Result<T, string>;

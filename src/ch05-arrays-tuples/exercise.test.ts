@@ -3,6 +3,7 @@ import { divmod, firstOr, isRole, LogLevel, ROLES, sorted } from './exercise';
 
 describe('5-1 sorted', () => {
   it('昇順に並べる', () => expect(sorted([3, 1, 2])).toEqual([1, 2, 3]));
+  it('数値の大小で並べる（辞書順ではない）', () => expect(sorted([10, 9, 1])).toEqual([1, 9, 10]));
   it('元の配列を壊さない', () => {
     const src = [3, 1, 2];
     sorted(src);

@@ -16,10 +16,12 @@ export type _t1 = Expect<Equal<ReturnType<typeof useToggle>, readonly [boolean, 
 /* ============================================================
  * 演習 20-2: reducer を書く（React なしでテストできる純粋関数）
  * Todo アプリの状態遷移を実装してください。
- *   add    : text から新しい Todo を作って末尾に追加（id は nextId を使う）
- *   toggle : id の done を反転
- *   remove : id の Todo を削除
- *   clear  : done が true のものをすべて削除
+ * アクションの判別子は type で、種類ごとに次の形にします。
+ *   { type: 'add', text: string }  : text から新しい Todo を作って末尾に追加
+ *                                    （id は state.nextId を使い、nextId は 1 進める）
+ *   { type: 'toggle', id: number } : id の done を反転
+ *   { type: 'remove', id: number } : id の Todo を削除
+ *   { type: 'clear' }              : done が true のものをすべて削除
  * 網羅性チェック（assertNever）を必ず入れること。
  * ============================================================ */
 export type Todo = { id: number; text: string; done: boolean };

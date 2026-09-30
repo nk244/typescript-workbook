@@ -65,7 +65,7 @@ export class UserProfile implements Serializable {
 /* ============================================================
  * 演習 7-3: abstract クラス
  * Shape を継承した Rectangle と Circle を実装してください。
- * area() を override すること（override キーワードが必須です）。
+ * area() を実装し、override キーワードを付けること。
  * ============================================================ */
 export abstract class Shape {
   abstract area(): number;
