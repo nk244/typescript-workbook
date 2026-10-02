@@ -8,7 +8,11 @@ import type { Equal, Expect } from '../lib/type-test';
  *   - triangle: base, height を持つ
  * 判別子のプロパティ名は kind にすること。
  * ============================================================ */
-export type Shape = unknown; // TODO
+export type Shape =
+  | { kind: 'circle', radius: number }
+  | { kind: 'rect', width: number, height: number }
+  | { kind: 'triangle', base: number, height: number }
+  | { kind: 'square', size: number };
 
 /* ============================================================
  * 演習 9-2: 網羅性チェック付きの switch
@@ -20,7 +24,19 @@ export function assertNever(value: never): never {
 }
 
 export function area(shape: Shape): number {
-  throw new Error('not implemented');
+  // throw new Error('not implemented');
+  switch (shape.kind) {
+    case 'circle':
+      return Math.PI * shape.radius ** 2;
+    case 'rect':
+      return shape.height * shape.width;
+    case 'triangle':
+      return shape.base * shape.height / 2;
+    case 'square':
+      return shape.size * shape.size;
+    default:
+      return assertNever(shape);
+  }
 }
 
 /* ============================================================
@@ -33,7 +49,11 @@ export function area(shape: Shape): number {
  *   - error:   message: string を持つ
  * 判別子は status にすること。
  * ============================================================ */
-export type RequestState = unknown; // TODO
+export type RequestState =
+  | { status: 'idle' }
+  | { status: 'loading' }
+  | { status: 'success', data: string[] }
+  | { status: 'error', message: string }; // TODO
 
 export type _t1 = Expect<
   Equal<
@@ -55,7 +75,19 @@ export type _t1 = Expect<
  * ここでも網羅性チェックを入れること。
  * ============================================================ */
 export function renderState(state: RequestState): string {
-  throw new Error('not implemented');
+  // throw new Error('not implemented');
+  switch (state.status) {
+    case 'idle':
+      return '待機中'
+    case 'loading':
+      return '読み込み中...'
+    case 'success':
+      return `${state.data.length} 件`
+    case 'error':
+      return `エラー: ${state.message}`
+    default:
+      return assertNever(state);
+  }
 }
 
 /* ============================================================
@@ -63,9 +95,10 @@ export function renderState(state: RequestState): string {
  * 値が「0 個以上の string を持つ配列」であることを判定する
  * 型述語 isStringArray を実装してください。
  * ============================================================ */
-export function isStringArray(value: unknown): boolean {
+export function isStringArray(value: unknown): value is string[] {
   // TODO: 戻り値型を型述語にする
-  throw new Error('not implemented');
+  return Array.isArray(value) && value.every((data) => typeof data === 'string');
+  // throw new Error('not implemented');
 }
 
 /* ============================================================
@@ -73,17 +106,21 @@ export function isStringArray(value: unknown): boolean {
  * 値が null / undefined でないことを表明する assertIsDefined を実装してください。
  * null か undefined なら Error を投げます。
  * ============================================================ */
-export function assertIsDefined<T>(value: T): void {
+export function assertIsDefined<T>(value: T): asserts value is NonNullable<T> {
   // TODO: 戻り値型を asserts 述語にする
-  throw new Error('not implemented');
+  if (value === null || value === undefined) throw new Error('値がありません');
+  // throw new Error('not implemented');
 }
 
 /* ============================================================
  * 演習 9-7: 網羅性チェックが効くことを確かめる
- * 9-1 の Shape に 'square' を足してみてください（size を持つ）。
+ * 9-1 の Shape に 'square'（正方形）を足してみてください。
+ * size: number は「一辺の長さ」です（面積ではありません）。
+ * 正方形なので縦と横は同じ長さで、面積は size * size になります。
+ * （square は英語で「正方形」。長方形は rect = rectangle です）
  * area がコンパイルエラーになるはずです。確認したら、
  * square にも対応して EXHAUSTIVE_CONFIRMED を true にしてください。
  * （square を Shape に残したままでも、消しても構いません。
  *   残す場合は area も対応させること）
  * ============================================================ */
-export const EXHAUSTIVE_CONFIRMED = false; // TODO: 確認したら true
+export const EXHAUSTIVE_CONFIRMED = true; // TODO: 確認したら true
