@@ -94,6 +94,32 @@ type Data = Awaited<Promise<Promise<string>>>;    // string（何重でも剥が
 
 **`typeof 関数名` + `ReturnType` は非常によく使います。** 実装から型を導けば、二重管理が消えます。
 
+### `Awaited` を読むための Promise 入門
+
+`Awaited` を理解するには、まず Promise が何かを知る必要があります（詳しくは第16章で扱います）。
+
+**Promise は「あとで届く値の入れ物（引換券）」です。** 通信のように時間がかかる処理は、結果が出るまで待てないので、先に引換券を返します。`Promise<User>` は「届いたら `User` になる引換券」という型です。
+
+```ts
+async function fetchUser(id: number): Promise<User> { /* ... */ }
+
+const ticket = fetchUser(1);   // Promise<User>（まだ User ではない）
+ticket.name;                   // ❌ 引換券に name は無い
+
+const user = await ticket;     // 値が届くのを待って、中身に交換する
+user.name;                     // ✅ user は User
+```
+
+- `async function` は、戻り値が自動で Promise に包まれる関数です。上の例は `User` を `return` しても、呼び出し側が受け取るのは `Promise<User>` です。
+- 処理が終わって中身が入ることを「解決（resolve）される」と言い、そのとき入る値を**解決後の値**と呼びます。`Promise<User>` の解決後の値は `User` です。
+- `Awaited<Promise<User>>` は、この包みを剥がして `User` を取り出す型です。
+
+関数の「解決後の値」の型は、`ReturnType` で戻り値（`Promise<User>`）を取り、`Awaited` で剥がして求めます。
+
+```ts
+type Fetched = Awaited<ReturnType<typeof fetchUser>>;   // User
+```
+
 ## 5. 文字列を加工する
 
 `Uppercase` / `Lowercase` / `Capitalize` / `Uncapitalize` があります（第13章で活躍）。
