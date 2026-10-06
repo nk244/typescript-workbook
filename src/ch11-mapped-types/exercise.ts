@@ -6,8 +6,8 @@ type ReadonlyUser = { readonly id: number; readonly name: string };
 /* ============================================================
  * 演習 11-1: keyof と インデックスアクセス型
  * ============================================================ */
-export type UserKeys = unknown; // TODO: User のキーのユニオン
-export type UserValues = unknown; // TODO: User の値のユニオン（email は省略可能なので undefined も含まれます）
+export type UserKeys = keyof User; // TODO: User のキーのユニオン
+export type UserValues = User[UserKeys]; // TODO: User の値のユニオン（email は省略可能なので undefined も含まれます）
 
 export type _t1 = Expect<Equal<UserKeys, 'id' | 'name' | 'email'>>;
 export type _t2 = Expect<Equal<UserValues, number | string | undefined>>;
@@ -24,7 +24,9 @@ export type _t2 = Expect<Equal<UserValues, number | string | undefined>>;
  * 作り方: README の第2節「Mapped Types の基本形」で、T のキーを 1 つずつ回して
  *   プロパティを作る書き方を説明しています。その形に、? を付けるだけです。
  * ============================================================ */
-export type MyPartial<T> = unknown; // TODO
+export type MyPartial<T> = {
+  [K in keyof T]?: T[K];
+};
 
 export type _t3 = Expect<Equal<MyPartial<{ a: number; b: string }>, { a?: number; b?: string }>>;
 
@@ -32,7 +34,9 @@ export type _t3 = Expect<Equal<MyPartial<{ a: number; b: string }>, { a?: number
  * 演習 11-3: Readonly を外す（Mutable）
  * readonly 修飾子を取り除く型を作ってください。
  * ============================================================ */
-export type Mutable<T> = unknown; // TODO
+export type Mutable<T> = {
+  -readonly [K in keyof T]: T[K];
+};
 
 export type _t4 = Expect<Equal<Mutable<ReadonlyUser>, { id: number; name: string }>>;
 
@@ -41,7 +45,9 @@ export type _t4 = Expect<Equal<Mutable<ReadonlyUser>, { id: number; name: string
  * 第2引数のキーだけを残す型を作ってください。
  * 存在しないキーを渡したらコンパイルエラーになること。
  * ============================================================ */
-export type MyPick<T, K> = unknown; // TODO: K に制約をつけること
+export type MyPick<T, K extends keyof T> = {
+  [P in K]: T[P];
+};
 
 export type _t5 = Expect<Equal<MyPick<User, 'id'>, { id: number }>>;
 
