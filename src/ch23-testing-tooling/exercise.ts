@@ -33,11 +33,15 @@ export const CHUNK_POLICY: 'throw' | 'empty' = 'empty'; // TODO: 実装に合わ
 type User = { id: number; role: 'admin' | 'user' };
 
 // TODO: groupBy(users, (u) => u.role) の戻り値型を書いてください
+//   users は User[]、キーは role なので 'admin' | 'user' です。
+//   groupBy の戻り値は Map<K, T[]> なので、T と K に何が入るかを置き換えて書きます。
+//   （下の _t1 が通れば正解です）
 export type GroupedByRole = unknown;
 
 export type _t1 = Expect<Equal<GroupedByRole, Map<'admin' | 'user', User[]>>>;
 
 // 実際の呼び出しからも同じ型が出ることを確かめる（コンパイルできれば OK）
+// （groupBy<User, 'admin' | 'user'> は、型引数を先に決めた groupBy の型です。外伝6の「インスタンス化式」）
 export type _t2 = Expect<
   Equal<ReturnType<typeof groupBy<User, 'admin' | 'user'>>, GroupedByRole>
 >;

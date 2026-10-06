@@ -79,6 +79,13 @@ export const okB: LinkOrButton = { onClick: () => {} };
  * type と payload を受け取り、対応するアクションを作る関数を実装してください。
  *   createAction('add', { text: 'a' })  -> { type: 'add', text: 'a' }
  * 間違った組み合わせはコンパイルエラーになること。
+ *   createAction('add', { id: 1 })      // エラー（add の payload は { text: string }）
+ *
+ * シグネチャの考え方（README 第2節）:
+ *   - type の型を K とし、K は Action の type のどれか（Action['type']）に限る
+ *   - payload の型は、ex02-2 で作った PayloadOf<K>
+ *   - 戻り値の型は、その type に対応するアクション（Extract<Action, { type: K }>）
+ *   実装は、{ type, ...payload } をそのまま返し、戻り値の型に合わせるときだけ as を使って構いません。
  * ============================================================ */
 export function createAction(type: unknown, payload: unknown): unknown {
   // TODO: シグネチャをジェネリックにする

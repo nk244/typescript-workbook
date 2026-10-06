@@ -77,6 +77,17 @@ type B = ElementOf<number>;      // never
 
 正規表現のキャプチャグループのようなものだと思ってください。
 
+`ElementOf<string[]>` は、次のように置き換えて読みます。
+
+```ts
+T extends (infer U)[] ? U : never      // 定義
+string[] extends (infer U)[] ? U : never   // ① T を string[] に
+// string[] を (infer U)[] に当てはめると U = string が見つかる → 条件が成り立つ
+string                                 // ② ? の左側の U（= string）が結果
+```
+
+`ElementOf<number>` は、`number` が `(infer U)[]`（配列の形）に当てはまらないので、`: never` 側になります。
+
 ### 組み込み型はほぼこれで書かれている
 
 ```ts
@@ -87,6 +98,26 @@ type MyAwaited<T> = T extends Promise<infer U> ? MyAwaited<U> : T;   // 再帰�
 
 `lib.es5.d.ts` を開くと、まさにこう書かれています。**標準ライブラリの型定義を読めるようになる**のが
 この章のいちばんの成果です。
+
+`MyReturnType<(name: string) => number>` は、次のように置き換えて読みます。
+
+```ts
+F extends (...args: never[]) => infer R ? R : never        // 定義
+(name: string) => number extends (...args: never[]) => infer R ? R : never   // ① F を渡した関数型に
+// 戻り値の位置に当てはまる型が number なので R = number
+number                                                     // ② ? の左側の R（= number）が結果
+```
+
+`MyAwaited` は、条件が成り立つ限り、自分自身を呼び直します（再帰）。
+
+```ts
+type R = MyAwaited<Promise<Promise<string>>>;
+
+MyAwaited<Promise<Promise<string>>>   // T = Promise<Promise<string>> → U = Promise<string> → MyAwaited<Promise<string>>
+MyAwaited<Promise<string>>            // T = Promise<string>          → U = string          → MyAwaited<string>
+MyAwaited<string>                     // string は Promise ではない → : T 側 → string
+// R は string
+```
 
 ### 複数の infer / 制約付き infer
 
@@ -129,6 +160,23 @@ type R = Reverse<[1, 2, 3]>;   // [3, 2, 1]
 ```
 
 読み方は関数型言語のパターンマッチと同じ。「先頭と残りに分解して、残りを再帰処理」。
+
+`Reverse<[1, 2, 3]>` を、外側から順に展開します。
+
+```ts
+Reverse<[1, 2, 3]>   // First = 1, Rest = [2, 3] → [...Reverse<[2, 3]>, 1]
+Reverse<[2, 3]>      // First = 2, Rest = [3]    → [...Reverse<[3]>, 2]
+Reverse<[3]>         // First = 3, Rest = []     → [...Reverse<[]>, 3]
+Reverse<[]>          // [] は [infer First, ...infer Rest] に当てはまらない → []
+```
+
+次に、内側から順に結果を戻します。
+
+```ts
+Reverse<[3]>         // [...[], 3]     = [3]
+Reverse<[2, 3]>      // [...[3], 2]    = [3, 2]
+Reverse<[1, 2, 3]>   // [...[3, 2], 1] = [3, 2, 1]
+```
 
 ## 5. どこまでやるべきか
 

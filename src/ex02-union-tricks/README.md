@@ -33,6 +33,26 @@ type Action = ActionFrom<ActionMap>;
 // { type: 'add'; text: string } | { type: 'remove'; id: number } | { type: 'clear' }
 ```
 
+`ActionFrom<ActionMap>` を、次のように置き換えて読みます。
+
+```ts
+{ [K in keyof M]: { type: K } & M[K] }[keyof M]          // 定義
+{ [K in keyof ActionMap]: { type: K } & ActionMap[K] }[keyof ActionMap]   // ① M を ActionMap に
+{ [K in 'add' | 'remove' | 'clear']: { type: K } & ActionMap[K] }['add' | 'remove' | 'clear']   // ② keyof を展開
+
+// ③ [K in ...] で K を 1 つずつ入れて、まずオブジェクトを作る
+{
+  add:    { type: 'add' }    & { text: string };
+  remove: { type: 'remove' } & { id: number };
+  clear:  { type: 'clear' }  & object;
+}
+
+// ④ 最後の ['add' | 'remove' | 'clear'] で、3 つの値をユニオンとして取り出す
+{ type: 'add' } & { text: string } | { type: 'remove' } & { id: number } | { type: 'clear' } & object
+```
+
+`{ type: 'clear' } & object` は、実質 `{ type: 'clear' }` と同じです。
+
 読み方: **Mapped Type でオブジェクトを作り、`[keyof M]` で「全部の値」を取り出す。**
 値をユニオンとして取り出すこの `[keyof T]` は、**型を「畳む」定番の手筋**です。
 
@@ -82,6 +102,20 @@ type DistributiveOmit<T, K extends PropertyKey> =
 type C = DistributiveOmit<A, 'kind'>;   // { x: number } | { y: string }
 ```
 
+`DistributiveOmit<A, 'kind'>` を置き換えて読むと、分配される様子が分かります。
+
+```ts
+T extends unknown ? Omit<T, K> : never        // 定義
+// T = A = { kind: 'a'; x: number } | { kind: 'b'; y: string }
+// 裸の T なので、ユニオンの各メンバーに分配される
+Omit<{ kind: 'a'; x: number }, 'kind'>        // { x: number }
+| Omit<{ kind: 'b'; y: string }, 'kind'>      // { y: string }
+// 結果: { x: number } | { y: string }
+```
+
+普通の `Omit<A, 'kind'>` が `{}` になるのは、`Pick<A, Exclude<keyof A, 'kind'>>` の `keyof A` が
+共通キーの `'kind'` だけで、`Exclude` のあとに残るキーが無いからです。
+
 `T extends unknown ?` は**何も絞り込まないが、分配だけを起こす**イディオムです（第12章）。
 `Partial` や `Pick` でも同じ問題が起きます。**ユニオンにユーティリティ型をかけたら結果を確認する。**
 
@@ -118,6 +152,24 @@ const a: Props = { href: '/' };                          // OK
 const b: Props = { onClick: () => {} };                  // OK
 const c: Props = { href: '/', onClick: () => {} };       // エラー
 ```
+
+`XOR<{ href: string }, { onClick: () => void }>` を置き換えて読みます。
+
+```ts
+Without<T, U> = { [K in Exclude<keyof T, keyof U>]?: never }
+
+Without<{ href: string }, { onClick: () => void }>
+// Exclude<'href', 'onClick'> = 'href' → { href?: never }
+Without<{ onClick: () => void }, { href: string }>
+// Exclude<'onClick', 'href'> = 'onClick' → { onClick?: never }
+
+XOR<...> = ({ href?: never } & { onClick: () => void })
+         | ({ onClick?: never } & { href: string })
+```
+
+- `{ href: '/' }` は 2 つ目に合う（`onClick` が無い）ので OK
+- `{ onClick: ... }` は 1 つ目に合う（`href` が無い）ので OK
+- 両方持つと、1 つ目では `href?: never` に、2 つ目では `onClick?: never` に違反するので、エラー
 
 ポイントは **`?: never`**（「あってはいけない」を表す）。
 判別子（`kind`）を置けるなら第9章のやり方のほうが読みやすいですが、

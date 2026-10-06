@@ -2,9 +2,11 @@ import { createContext, useReducer, useState } from 'react';
 import type { Equal, Expect } from '../lib/type-test';
 
 /* ============================================================
- * 演習 20-1: useState の型引数
+ * 演習 20-1: カスタムフックの戻り値（タプル）
  * useToggle は真偽値と、それを反転する関数をタプルで返します。
+ * 内部では useState を使います（初期値は引数 initial）。
  * as const を忘れないこと。
+ *   const [on, toggle] = useToggle();   // on は最初 false。toggle() を呼ぶと true、もう一度で false
  * ============================================================ */
 export function useToggle(initial = false) {
   // TODO

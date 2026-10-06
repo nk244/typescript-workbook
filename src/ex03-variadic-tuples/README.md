@@ -27,6 +27,14 @@ type Last<T> = T extends readonly [...unknown[], infer L] ? L : never;   // 末�
 
 **`[...unknown[], infer L]` のように「先頭が可変長」でも書ける**のがポイントです。
 
+`[1, 2, 3]` を渡すと、`infer` がどこを取り出すかは次のとおりです。
+
+```ts
+Head<[1, 2, 3]>   // readonly [infer H, ...unknown[]] に当てはめる: H = 1
+Tail<[1, 2, 3]>   // readonly [unknown, ...infer R] に当てはめる: R = [2, 3]
+Last<[1, 2, 3]>   // readonly [...unknown[], infer L] に当てはめる: L = 3
+```
+
 ## 2. 関数の引数をタプルとして扱う
 
 ```ts
@@ -78,6 +86,15 @@ type R = Awaitify<[Promise<string>, Promise<number>]>;
 // [string, number]   ← 配列ではなくタプルのまま！
 ```
 
+`Awaitify<[Promise<string>, Promise<number>]>` を置き換えて読みます。
+
+```ts
+{ [K in keyof T]: Awaited<T[K]> }   // 定義
+// T = [Promise<string>, Promise<number>]。タプルに対する [K in keyof T] は、各要素をその位置のまま変換する
+[Awaited<Promise<string>>, Awaited<Promise<number>>]   // 0 番目と 1 番目を、それぞれ変換
+[string, number]                                       // Awaited で Promise を剥がす
+```
+
 `keyof` がタプルに対しては「インデックス」を指すため、**長さと順序が保たれます**。
 `Promise.all` の型定義がタプルを返せるのは、この仕組みのおかげです。
 
@@ -95,6 +112,25 @@ type R = PipeResult<[(n: number) => string, (s: string) => boolean], number>;   
 ```
 
 「先頭の関数を適用して、残りに再帰」。第12章のタプル再帰そのものです。
+
+`PipeResult<[(n: number) => string, (s: string) => boolean], number>` を、外側から順に展開します。
+
+```ts
+PipeResult<[(n: number) => string, (s: string) => boolean], number>
+// 先頭 (arg: number) => infer Out に (n: number) => string が当てはまる: Out = string
+// 残り Rest = [(s: string) => boolean]
+// → PipeResult<[(s: string) => boolean], string>
+
+PipeResult<[(s: string) => boolean], string>
+// 先頭 (arg: string) => infer Out に (s: string) => boolean が当てはまる: Out = boolean
+// 残り Rest = []
+// → PipeResult<[], boolean>
+
+PipeResult<[], boolean>
+// [] は先頭が無いので当てはまらない → In（= boolean）をそのまま返す
+
+// 結果: boolean
+```
 
 実務では、この手の関数は**オーバーロードを 10 個くらい並べて実装する**ことが多いです
 （RxJS や lodash の `flow` がそう）。再帰型より型エラーが分かりやすく、

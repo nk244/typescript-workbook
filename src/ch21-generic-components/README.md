@@ -91,6 +91,17 @@ export function Text<E extends React.ElementType = 'span'>({
 `as` の値によって、**受け付ける props が切り替わります**。
 実装はやや複雑ですが、UI ライブラリ（MUI、Chakra など）の中身はこれです。
 
+`<Text as="a" href="/next">` では、`E` が `'a'` に決まります。`TextProps<E>` を置き換えて読むと、次のようになります。
+
+```tsx
+{ as?: E; children?: React.ReactNode } & Omit<React.ComponentPropsWithoutRef<E>, 'as' | 'children'>   // 定義
+{ as?: 'a'; children?: React.ReactNode } & Omit<React.ComponentPropsWithoutRef<'a'>, 'as' | 'children'> // ① E = 'a'（as="a" から推論）
+// ComponentPropsWithoutRef<'a'> は <a> が受け取れる props（href、target など）一式
+// → as と children に加えて、href などが使える
+```
+
+`E = 'button'` なら `ComponentPropsWithoutRef<'button'>` になり、`href` は含まれません。だから `<Text as="button" href=... />` はエラーになります。
+
 ## 4. キーと値を結びつけるフォーム
 
 第8章の `K extends keyof T` の応用です。
@@ -104,6 +115,16 @@ type FieldProps<T, K extends keyof T> = {
 ```
 
 `name="age"` を渡したら `value` は `number` でなければならない、と型で強制できます。
+`FieldProps<Form, 'age'>` を置き換えて読むと、次のようになります。
+
+```ts
+type Form = { name: string; age: number };
+
+{ name: K; value: T[K]; onChange: (name: K, value: T[K]) => void }                          // 定義
+{ name: 'age'; value: Form['age']; onChange: (name: 'age', value: Form['age']) => void }    // ① T = Form、K = 'age'
+{ name: 'age'; value: number; onChange: (name: 'age', value: number) => void }              // ② Form['age'] = number
+```
+
 react-hook-form のようなライブラリは、これをさらに推し進めて
 **ネストしたパス（'user.address.city'）まで型で追跡**します（第13章のテンプレートリテラル型）。
 

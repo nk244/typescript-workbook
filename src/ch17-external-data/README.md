@@ -61,6 +61,18 @@ type Infer<V> = V extends Validator<infer T> ? T : never;
 「`V` が `Validator<なにか>` の形をしているなら、その『なにか』を `T` として取り出す」という、
 これまでと同じパターンです。
 
+`Infer<Validator<number>>` は、次のように置き換えて読みます。
+
+```ts
+V extends Validator<infer T> ? T : never                // 定義
+Validator<number> extends Validator<infer T> ? T : never   // ① V を Validator<number> に
+// Validator<number> を Validator<infer T> に当てはめると T = number が見つかる
+number                                                  // ② ? の左側の T（= number）が結果
+```
+
+`v.number()` は `Validator<number>` を返し、`v.object({...})` は各フィールドの `Infer` を集めた
+`Validator<{ id: number; name: string }>` を返します。だから `typeof userSchema` から型を取り出せます。
+
 これが **zod / valibot / arktype** といったライブラリの発想です。
 演習では、この仕組みのミニ版を自分で作ります。**作ると原理が完全に分かります。**
 

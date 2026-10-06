@@ -70,7 +70,7 @@ export type _t6 = Expect<Equal<ConfigArgs, [host: string, port: number]>>;
  * 演習 10-6: Promise を剥がす
  * fetchUser の「解決後の値」の型を取り出してください。
  * （Promise<X> は「あとで X になる値の入れ物」。中身の X が「解決後の値」です。
- *   Promise は第16章で詳しく扱います。README 第4章末尾にも簡単な説明があります）
+ *   Promise は第16章で詳しく扱います。この章の README の第4節末尾「Awaited を読むための Promise 入門」にも簡単な説明があります）
  * ============================================================ */
 export async function fetchUser(id: number): Promise<User> {
   void id;

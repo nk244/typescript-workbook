@@ -28,6 +28,10 @@ export function compact<T>(items: readonly T[]): NonNullable<T>[] {
  * 演習 ex05-3: 型の付いた Object.keys / entries
  * 「自分が作ったオブジェクトに対してだけ使う」前提のラッパーを作ってください。
  * as を使ってよいですが、なぜ嘘なのかをコメントに書くこと。
+ *   objectKeys(user)     // (keyof User)[]       … Object.keys は string[] を返すので、キーの型に合わせる
+ *   objectEntries(user)  // [keyof User, User[keyof User]][]
+ *                        //                      … Object.entries も同様に、キーと値の型を合わせる
+ * 引数は、型引数 T を持つ object にします（下の型テストが objectKeys<User> と書いています）。
  * ============================================================ */
 export function objectKeys(obj: unknown): unknown {
   // TODO
@@ -80,6 +84,8 @@ export function runWithSpan(log: string[]): void {
 /* ============================================================
  * 演習 ex05-6: 推論結果を確認する小技
  * 下の値の型を、実際にホバーして確かめてから書いてください。
+ * 手で書き写すこと（typeof inferred と書くと、確かめたことになりません）。
+ * ホバーで見える型を、そのまま InferredType に書き写せば _t6 が通ります。
  * ============================================================ */
 export const inferred = { id: 1, tags: ['a', 'b'] } as const;
 

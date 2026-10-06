@@ -51,6 +51,15 @@ export function Text<E extends React.ElementType = 'span'>(props: TextProps<E>) 
  * name に渡したキーに対応する型の値だけを value に許すようにしてください。
  * 実装は <input aria-label={String(name)} value={String(value)} onChange=... />。
  * onChange は (name, 入力された文字列) を渡すこと。
+ *
+ * props の型は次の 3 つにしてください（README 第4節の FieldProps と同じ形です）。
+ *   name:     K                                  … キー
+ *   value:    T[K]                               … そのキーに対応する値の型
+ *   onChange: (name: K, value: string) => void   … 入力欄から来るのは文字列なので、value は string
+ *   （README では onChange の value が T[K] ですが、この演習では入力された文字列を渡すので string にします）
+ *
+ * 例: Field<{ name: string; age: number }, 'age'> では、
+ *   value は number だけを受け付けます（name="age" なのに value="ken" はエラー）。
  * ============================================================ */
 export type FieldProps<T, K extends keyof T> = {
   // TODO

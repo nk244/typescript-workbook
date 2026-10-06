@@ -57,6 +57,15 @@ type Entity = WithId & WithTimestamps;   // 3 つのプロパティを全部持�
 `&` は「両方の条件を満たす」＝集合の**積**です。ユニオン `|` が和であることと対になります。
 プロパティが衝突すると `never` になることがあるので注意。
 
+```ts
+type A = { id: number };
+type B = { id: string };
+type AB = A & B;      // { id: number & string } → id の型は never
+// id は「number でもあり string でもある値」でなければならず、そんな値は存在しない
+```
+
+**用途:** 小さな型を組み合わせて、大きな型を作る（上の `Entity` のように、共通部分を使い回す）。
+
 ## 4. 過剰プロパティチェック（Excess Property Check）
 
 これは初学者が必ずつまずくところです。

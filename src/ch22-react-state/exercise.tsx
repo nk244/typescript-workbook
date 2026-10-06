@@ -81,6 +81,13 @@ export function UserName({ fetchName }: { fetchName: () => Promise<string> }) {
  * Endpoints からパスとレスポンス型の対応を導いてください。
  * api('/users') は User[] を、api('/settings') は Settings を返すこと。
  * 実装は fetcher(path) の結果をそのまま返すだけで構いません。
+ *
+ * 作り方のヒント: README 第4節の api と同じ形です。
+ *   - path の型は、Endpoints のキーのどれか（keyof Endpoints）に限る
+ *   - 戻り値の型は、その path に対応する Endpoints の値（Endpoints[path の型]）を Promise に包んだもの
+ *
+ * fetcher は unknown を返すので、返すときに型を合わせるための as はここだけ使って構いません
+ * （外から来る値の型を宣言する「境界」の 1 か所です。第17章）。
  * ============================================================ */
 export type User = { id: number; name: string };
 export type Settings = { theme: 'light' | 'dark' };

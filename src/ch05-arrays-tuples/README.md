@@ -152,6 +152,16 @@ export type Color = (typeof Color)[keyof typeof Color];   // 'red' | 'green'
 （`'Red' | 'Green'`。体系的には第11章、第8章でも先出しします）。配列の `[number]` が
 「要素の型」を取り出すのに対して、`keyof` は「キーの型」を取り出す、いわば“オブジェクト版”です。
 `(typeof Color)[keyof typeof Color]` は「そのキーで引いたときの値の型」＝ユニオン型になります。
+内側から順に置き換えると、結果が分かります。
+
+```ts
+const Color = { Red: 'red', Green: 'green' } as const;
+
+typeof Color                         // { readonly Red: 'red'; readonly Green: 'green' }
+keyof typeof Color                   // 'Red' | 'Green'
+(typeof Color)[keyof typeof Color]   // (typeof Color)['Red' | 'Green']
+                                     // = 'red' | 'green'   ← 'Red' で引くと 'red'、'Green' で引くと 'green'
+```
 
 既存コードに enum があるなら無理に消す必要はありません。**新しく書くならユニオン型**、が指針です。
 

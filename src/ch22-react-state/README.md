@@ -113,6 +113,18 @@ const users = await api('/users');    // User[]
 const user = await api('/user');      // エラー: そんなパスはない
 ```
 
+`api('/users')` の戻り値の型は、次のように置き換えて決まります。
+
+```ts
+async function api<P extends keyof Endpoints>(path: P): Promise<Endpoints[P]>   // 定義
+// keyof Endpoints = '/users' | '/users/:id'
+// ① 引数 '/users' から P = '/users' と推論される
+Promise<Endpoints['/users']>   // ② P を置き換える
+Promise<User[]>                // ③ Endpoints['/users'] は User[]
+```
+
+`api('/user')` は、`'/user'` が `keyof Endpoints` に含まれないので、`P` に入れられずエラーになります。
+
 **呼び出し側は型注釈を 1 文字も書かずに、正しい型を受け取れます。**
 第13章のテンプレートリテラル型と組み合わせると、パスパラメータも型で要求できます。
 

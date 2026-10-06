@@ -27,6 +27,19 @@ type UpdateUserInput = Partial<Omit<User, 'id'>>;
 この 2 行は実務で無限に出てきます。**元の型を 1 つ書けば、派生する型は導ける。**
 `User` に項目が増えたとき、入力型も自動で追随します。
 
+それぞれ、結果は次の型になります。
+
+```ts
+type CreateUserInput = Omit<User, 'id'>;
+// { name: string; email: string }                ← id を除いた残り
+
+type UpdateUserInput = Partial<Omit<User, 'id'>>;
+// { name?: string; email?: string }              ← 上の結果に Partial をかけたもの（内側から順に適用）
+```
+
+**仕組み（一言）:** これらは「型を受け取って、キーを回しながら新しい型を作る」型の関数です。
+中身は第11章（Mapped Types）で自作します。
+
 ### Omit の落とし穴
 
 `Omit` はキー名の存在をチェックしません。

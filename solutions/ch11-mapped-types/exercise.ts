@@ -32,37 +32,35 @@ export type MyPick<T, K extends keyof T> = {
 export type _t5 = Expect<Equal<MyPick<User, 'id'>, { id: number }>>;
 
 // 11-5
-// as 句で「除きたいキーなら never」にすると、そのキーは結果から消える
+// 回すキーを「keyof T から K を除いたもの」にする（as 句と条件型でも書けるが、Exclude のほうが素直）
 export type StrictOmit<T, K extends keyof T> = {
-  [P in keyof T as P extends K ? never : P]: T[P];
+  [P in Exclude<keyof T, K>]: T[P];
 };
 
 export type _t6 = Expect<Equal<StrictOmit<User, 'email'>, { id: number; name: string }>>;
 
 // 11-6
 // keyof T は string | number | symbol になりうるので、
-// Capitalize に渡す前に string & K で string に絞る
-export type Getters<T> = {
-  [K in keyof T as `get${Capitalize<string & K>}`]: () => T[K];
+// Uppercase に渡す前に string & K で string に絞る
+export type UpperKeys<T> = {
+  [K in keyof T as Uppercase<string & K>]: T[K];
 };
 
-export type _t7 = Expect<
-  Equal<Getters<{ name: string; age: number }>, { getName: () => string; getAge: () => number }>
->;
+export type _t7 = Expect<Equal<UpperKeys<{ name: string; age: number }>, { NAME: string; AGE: number }>>;
 
 // 11-7
-export type FunctionKeysOnly<T> = {
-  [K in keyof T as T[K] extends (...args: never[]) => unknown ? K : never]: T[K];
+// OmitByValue の ? : の「はい」側と「いいえ」側を入れ替える
+export type PickByValue<T, V> = {
+  [K in keyof T as T[K] extends V ? K : never]: T[K];
 };
 
-export type _t8 = Expect<
-  Equal<
-    FunctionKeysOnly<{ id: number; save: () => void; load: (n: number) => string }>,
-    { save: () => void; load: (n: number) => string }
-  >
+export type _t8a = Expect<
+  Equal<PickByValue<{ id: number; name: string; age: number }, number>, { id: number; age: number }>
 >;
+export type _t8b = Expect<Equal<PickByValue<{ id: number; name: string }, boolean>, {}>>;
 
 // 11-8
+// DeepPartial の ? を readonly に変えたもの
 export type DeepReadonly<T> = {
   readonly [K in keyof T]: T[K] extends object ? DeepReadonly<T[K]> : T[K];
 };

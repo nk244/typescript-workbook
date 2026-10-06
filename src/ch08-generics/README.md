@@ -38,6 +38,16 @@ const b = first(['x']);        // string | undefined
 `T` は呼び出しごとに決まる**型のプレースホルダ**です。ほとんどの場合、
 呼び出し側は何も書かなくても**引数から推論されます**（型引数推論）。
 
+`first([1, 2])` と呼んだときは、`T` を `number` に置き換えて読みます。
+
+```ts
+function first<T>(items: readonly T[]): T | undefined   // 定義
+function first(items: readonly number[]): number | undefined   // T = number（引数 [1, 2] から推論）
+```
+
+`T` という名前に決まりはありません。「Type」の頭文字を使う慣習があり、
+`K`（Key）、`V`（Value）、`E`（Element）なども同じ流儀です。
+
 ## 2. 制約（constraints）
 
 `T` は何でもよい、では困ることがあります。
@@ -100,6 +110,21 @@ function pickSome<T extends object, K extends keyof T>(obj: T, keys: K[]): { [P 
 
 `[P in K]` は「K に含まれる各キー P について」という意味のループです
 （これを体系的に扱うのが第11章の Mapped Types）。
+
+```ts
+const user = { name: 'ken', age: 30 };
+const r = pickSome(user, ['name']);
+```
+
+戻り値の型 `{ [P in K]: T[P] }` は、次のように置き換えて読みます。
+
+```ts
+{ [P in K]: T[P] }                       // 定義
+{ [P in 'name']: T[P] }                  // ① K = 'name'（引数 ['name'] から推論）
+{ [P in 'name']: { name: string; age: number }[P] }   // ② T = user の型
+{ name: { name: string; age: number }['name'] }       // ③ P に 'name' を入れる（繰り返しは 1 回）
+{ name: string }                                      // ④ これが r の型
+```
 
 ## 4. デフォルト型引数
 

@@ -44,6 +44,9 @@ export function withTiming(fn: unknown, onDone: (ms: number) => void): unknown {
 /* ============================================================
  * 演習 ex03-5: 第 1 引数を束縛する
  * bindFirst(fn, first) は「残りの引数だけを取る関数」を返します。
+ *   const greet = (greeting: string, name: string) => `${greeting}, ${name}`;
+ *   const hello = bindFirst(greet, 'Hello');   // (name: string) => string
+ *   hello('ken');                              // 'Hello, ken'
  * ============================================================ */
 export function bindFirst(fn: unknown, first: unknown): unknown {
   // TODO

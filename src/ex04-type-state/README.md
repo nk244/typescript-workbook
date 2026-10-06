@@ -60,6 +60,20 @@ new QueryBuilder().set('table', 'users').build();   // OK
 new QueryBuilder().set('limit', '10').build();      // エラー
 ```
 
+`Set` に何が溜まっていくかを、呼び出しごとに追いかけます。
+
+```ts
+new QueryBuilder()             // Set = never（デフォルト）
+  .set('table', 'users')       // K = 'table' → QueryBuilder<never | 'table'> = QueryBuilder<'table'>
+  .build();                    // this: 'table' extends 'table' ? QueryBuilder<'table'> : never
+                               //       → 条件が成り立つので this は QueryBuilder<'table'> → 呼べる
+
+new QueryBuilder()
+  .set('limit', '10')          // K = 'limit' → QueryBuilder<'limit'>
+  .build();                    // this: 'table' extends 'limit' ? ... : never
+                               //       → 成り立たないので this は never → 呼べない（エラー）
+```
+
 **ポイントは `this` を条件型にすること。** 条件を満たさないと `this` が `never` になり、
 「そのメソッドは存在するが呼べない」状態を作れます。
 

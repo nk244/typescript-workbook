@@ -6,6 +6,12 @@ import type { Equal, Expect } from '../lib/type-test';
  *   connect() -> Connection<'open'>
  *   send(open な接続, message) -> 送ったメッセージの配列
  *   close(open な接続) -> Connection<'closed'>
+ *
+ * 動作:
+ *   - connect(): state が 'open'、sent が空配列（[]）の接続を返す
+ *   - send(conn, message): conn.sent に message を追加し、conn.sent を返す
+ *       （＝これまでに送ったメッセージの配列。1 回目なら ['a']、続けて 'b' なら ['a', 'b']）
+ *   - close(conn): state が 'closed' で、sent は conn のものを引き継いだ新しい接続を返す
  * ============================================================ */
 export type ConnState = 'open' | 'closed';
 
@@ -39,6 +45,8 @@ send(close(connect()), 'hi');
 /* ============================================================
  * 演習 ex04-2: ビルダーに「必須項目」を型で強制する
  * table を set していなければ build() を呼べないようにしてください。
+ *   new QueryBuilder().set('table', 'users').build()   // OK
+ *   new QueryBuilder().set('limit', '10').build()      // コンパイルエラー（table が無い）
  * ============================================================ */
 export type QueryKey = 'table' | 'where' | 'limit';
 
@@ -52,7 +60,7 @@ export class QueryBuilder<Set extends QueryKey = never> {
   }
 
   // TODO: this の型を条件型にして、table 必須にする
-  // 出力は `table=users where=x` のように 'キー=値' を半角スペースで連結したもの
+  // 出力は `table=users where=x` のように 'キー=値' を半角スペースで連結したもの（set した順）
   build(): string {
     throw new Error('not implemented');
   }

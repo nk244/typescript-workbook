@@ -54,6 +54,21 @@ type Parts = Split<'a.b.c', '.'>;   // ['a', 'b', 'c']
 
 パターンにマッチさせて、前後をキャプチャする。正規表現のように読めます。
 
+`Split<'a.b.c', '.'>` を、外側から順に展開します（`Head` は、最初の `.` までの最短一致です）。
+
+```ts
+Split<'a.b.c', '.'>   // `${Head}.${Tail}` に当てはめる: Head = 'a', Tail = 'b.c'  → ['a', ...Split<'b.c', '.'>]
+Split<'b.c', '.'>     // Head = 'b', Tail = 'c'                                  → ['b', ...Split<'c', '.'>]
+Split<'c', '.'>       // 'c' に '.' が無いので当てはまらない                       → ['c']
+```
+
+次に、内側から順に結果を戻します。
+
+```ts
+Split<'b.c', '.'>     // ['b', ...['c']]       = ['b', 'c']
+Split<'a.b.c', '.'>   // ['a', ...['b', 'c']]  = ['a', 'b', 'c']
+```
+
 ## 4. 実用例
 
 ### (a) イベント名の型付け
@@ -76,6 +91,22 @@ type Params<Path extends string> =
 type P = Params<'/users/:userId/posts/:postId'>;   // 'userId' | 'postId'
 ```
 
+`Params<'/users/:userId/posts/:postId'>` を展開します。
+
+```ts
+Params<'/users/:userId/posts/:postId'>
+// 1 つ目のパターン `${string}:${infer Param}/${infer Rest}` に当てはめる
+//   ${string} = '/users/'、Param = 'userId'、Rest = 'posts/:postId'
+// → 'userId' | Params<'/posts/:postId'>
+
+Params<'/posts/:postId'>
+// 1 つ目のパターン: ':' の後に '/' が無いので当てはまらない
+// 2 つ目のパターン `${string}:${infer Param}` に当てはめる: Param = 'postId'
+// → 'postId'
+
+// 結果: 'userId' | 'postId'
+```
+
 Express や React Router の型定義は、まさにこの手法で書かれています。
 **URL 文字列を書いた瞬間に、必要なパラメータが型で要求される**わけです。
 
@@ -87,6 +118,22 @@ type Paths<T> = T extends object
   : never;
 
 type P = Paths<{ user: { name: string } }>;   // 'user' | 'user.name'
+```
+
+`Paths<{ user: { name: string } }>` を展開します。
+
+```ts
+Paths<{ user: { name: string } }>
+// T は object なので、Mapped Type の部分を計算する。keyof T = 'user'
+// K = 'user' のとき: 'user' | `user.${Paths<{ name: string }>}`
+// → { user: 'user' | `user.${Paths<{ name: string }>}` }['user']    ← 最後の [keyof T] で値を取り出す
+
+Paths<{ name: string }>
+// K = 'name' のとき: 'name' | `name.${Paths<string>}`
+// Paths<string>: string は object ではないので never。`name.${never}` は never
+// → 'name'
+
+// 'user.${...}' に 'name' を入れて、結果: 'user' | 'user.name'
 ```
 
 i18n のキーやフォームライブラリ（react-hook-form など）でよく見る型です。
